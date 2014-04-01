@@ -9,13 +9,13 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="接口的默认方法 Java 8 中我们可以利用 default 关键字来为接口添加非抽象方法的实现。这个特性也被称为扩展方法。下面是一个例子： 1
+  <meta name="description" content="接口的默认方法 Java 8 中我们可以利用 default 关键字来为接口添加非抽象方法。这个特性也被称为扩展方法。例子如下： 1
 2
 3
 4
 5
 6
-7 interface Formula { double calculate(int a); default double sqrt &hellip;">
+7 interface Formula { double calculate(int a); default double sqrt(int a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -102,7 +102,7 @@
 
   <div class="entry-content"><h3>接口的默认方法</h3>
 
-<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法的实现。这个特性也被称为<strong>扩展方法</strong>。下面是一个例子：</p>
+<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。例子如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -144,7 +144,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>上面的<code>formula</code>对象使用匿名对象的方式实现了<code>Formula</code>接口。代码看起来很复杂，用了6行代码实现了一个简单的计算<code>sqrt(a * 100)</code>。在后面的教程中，我们将会看到在Java 8 中如何使用更简单的方式来实现一个单方法对象。</p>
+<p>上面的<code>formula</code>对象使用匿名对象的方式实现了<code>Formula</code>接口。代码看起来比较啰嗦，用了6行代码实现了一个简单的计算<code>sqrt(a * 100)</code>。在后面的教程中，我们将会看到在Java 8 中如何使用更简单的方式来实现一个单方法对象。</p>
 </div>
   
   

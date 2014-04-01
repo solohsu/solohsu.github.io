@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java8 | sOlOHsU's Blog]]></title>
   <link href="http://solohsu.github.io/blog/categories/java8/atom.xml" rel="self"/>
   <link href="http://solohsu.github.io/"/>
-  <updated>2014-04-02T01:22:51+08:00</updated>
+  <updated>2014-04-02T01:38:55+08:00</updated>
   <id>http://solohsu.github.io/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -20,7 +20,7 @@
     <id>http://solohsu.github.io/blog/2014/04/01/java-8-default-method</id>
     <content type="html"><![CDATA[<h3>接口的默认方法</h3>
 
-<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法的实现。这个特性也被称为<strong>扩展方法</strong>。下面是一个例子：</p>
+<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。例子如下：</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -80,7 +80,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>上面的<code>formula</code>对象使用匿名对象的方式实现了<code>Formula</code>接口。代码看起来很复杂，用了6行代码实现了一个简单的计算<code>sqrt(a * 100)</code>。在后面的教程中，我们将会看到在Java 8 中如何使用更简单的方式来实现一个单方法对象。</p>
+<p>上面的<code>formula</code>对象使用匿名对象的方式实现了<code>Formula</code>接口。代码看起来比较啰嗦，用了6行代码实现了一个简单的计算<code>sqrt(a * 100)</code>。在后面的教程中，我们将会看到在Java 8 中如何使用更简单的方式来实现一个单方法对象。</p>
 ]]></content>
   </entry>
   
