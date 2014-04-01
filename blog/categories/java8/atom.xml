@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java8 | My Octopress Blog]]></title>
+  <link href="http://solohsu.github.io/blog/categories/java8/atom.xml" rel="self"/>
+  <link href="http://solohsu.github.io/"/>
+  <updated>2014-04-02T01:03:38+08:00</updated>
+  <id>http://solohsu.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Java 8 简明教程(1):default Method]]></title>
+    <link href="http://solohsu.github.io/blog/2014/04/01/java-8-default-method/"/>
+    <updated>2014-04-01T23:56:29+08:00</updated>
+    <id>http://solohsu.github.io/blog/2014/04/01/java-8-default-method</id>
+    <content type="html"><![CDATA[<h3>接口的默认方法</h3>
+
+<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法的实现。这个特性也被称为<strong>扩展方法</strong>。下面是一个例子：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">interface</span> <span class="nc">Formula</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">double</span> <span class="nf">calculate</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">default</span> <span class="kt">double</span> <span class="nf">sqrt</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>除了<code>calculate</code>方法这个抽象方法之外，<code>Formula</code>接口还定义了一个默认方法<code>sqrt</code>，接口的实现类只需要实现抽象方法<code>calculate</code>，而默认方法<code>sqrt</code>是直接可以拿来用的。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Formula</span> <span class="n">formula</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Formula</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">calculate</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">a</span> <span class="o">*</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">formula</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>     <span class="c1">// 100.0</span>
+</span><span class='line'><span class="n">formula</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="mi">16</span><span class="o">);</span>           <span class="c1">// 4.0</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面的<code>formula</code>对象使用匿名对象的方式实现了<code>Formula</code>接口。代码看起来很复杂，用了6行代码实现了一个简单的计算<code>sqrt(a * 100)</code>。在后面的教程中，我们将会看到在Java 8 中如何使用更简单的方式来实现一个单方法对象。</p>
+]]></content>
+  </entry>
+  
+</feed>
