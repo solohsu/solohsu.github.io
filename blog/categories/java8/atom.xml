@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java8 | sOlOHsU's Blog]]></title>
   <link href="http://solohsu.github.io/blog/categories/java8/atom.xml" rel="self"/>
   <link href="http://solohsu.github.io/"/>
-  <updated>2014-04-02T01:38:55+08:00</updated>
+  <updated>2014-04-02T16:05:42+08:00</updated>
   <id>http://solohsu.github.io/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -14,41 +14,13 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(1):default Method]]></title>
-    <link href="http://solohsu.github.io/blog/2014/04/01/java-8-default-method/"/>
-    <updated>2014-04-01T23:56:29+08:00</updated>
-    <id>http://solohsu.github.io/blog/2014/04/01/java-8-default-method</id>
-    <content type="html"><![CDATA[<h3>接口的默认方法</h3>
+    <title type="html"><![CDATA[Java 8 简明教程(2):lambda Expression]]></title>
+    <link href="http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression/"/>
+    <updated>2014-04-02T15:34:54+08:00</updated>
+    <id>http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression</id>
+    <content type="html"><![CDATA[<h3>Lambda 表达式</h3>
 
-<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。例子如下：</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">interface</span> <span class="nc">Formula</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">double</span> <span class="nf">calculate</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">default</span> <span class="kt">double</span> <span class="nf">sqrt</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>除了<code>calculate</code>方法这个抽象方法之外，<code>Formula</code>接口还定义了一个默认方法<code>sqrt</code>，接口的实现类只需要实现抽象方法<code>calculate</code>，而默认方法<code>sqrt</code>是直接可以拿来用的。</p>
+<p>先来看一个对字符串数组进行排序的例子，在之前的Java版本中，我们通常这样来实现：</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -66,21 +38,77 @@
 <span class='line-number'>14</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Formula</span> <span class="n">formula</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Formula</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">calculate</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nf">sqrt</span><span class="o">(</span><span class="n">a</span> <span class="o">*</span> <span class="mi">100</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">};</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">names</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">&quot;peter&quot;</span><span class="o">,</span> <span class="s">&quot;anna&quot;</span><span class="o">,</span> <span class="s">&quot;mike&quot;</span><span class="o">,</span> <span class="s">&quot;xenia&quot;</span><span class="o">);</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">formula</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>     <span class="c1">// 100.0</span>
-</span><span class='line'><span class="n">formula</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="mi">16</span><span class="o">);</span>           <span class="c1">// 4.0</span>
+</span><span class='line'><span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">names</span><span class="o">,</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">String</span> <span class="n">a</span><span class="o">,</span> <span class="n">String</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;});&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>静态方法<code>Collections.sort</code>接受一个数组和一个比较器来对这个数组进行排序。因而我们经常需要创建一个匿名的比较器并把它传递给<code>sort</code>方法。</p>
+
+<p>为了避免整天没完没了的创建匿名对象，Java 8使用了一种更简洁的语法，lambda表达式：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">names</span><span class="o">,</span> <span class="o">(</span><span class="n">String</span> <span class="n">a</span><span class="o">,</span> <span class="n">String</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;});&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>可以看到代码比以前短了不少并且变得更加易读。但是它还能变得更短：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">names</span><span class="o">,</span> <span class="o">(</span><span class="n">String</span> <span class="n">a</span><span class="o">,</span> <span class="n">String</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">b</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>
 </span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>上面的<code>formula</code>对象使用匿名对象的方式实现了<code>Formula</code>接口。代码看起来比较啰嗦，用了6行代码实现了一个简单的计算<code>sqrt(a * 100)</code>。在后面的教程中，我们将会看到在Java 8 中如何使用更简单的方式来实现一个单方法对象。</p>
+<p>如果方法中只有一行语句，可以省略大括号和<code>return</code>关键字。但是，这还没完：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">names</span><span class="o">,</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">b</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Java编译器会自动进行参数类型检查，所以这些我们也可以省略掉。接下来我们将更深入的讲解一下lambda表达式更广泛的用途。</p>
 ]]></content>
   </entry>
   
