@@ -1,27 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://solohsu.github.io/blog/2014/04/01/java-8-default-method/</loc>
+        <loc>http://www.solohsu.com/blog/2014/04/01/java-8-default-method/</loc>
         <lastmod>2014-04-02T16:08:45+08:00</lastmod>
     </url>
     <url>
-        <loc>http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression/</loc>
+        <loc>http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression/</loc>
         <lastmod>2014-04-02T16:08:45+08:00</lastmod>
     </url>
     <url>
-        <loc>http://solohsu.github.io/blog/2014/04/02/java-8-functional-interface/</loc>
+        <loc>http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/</loc>
         <lastmod>2014-04-02T16:58:49+08:00</lastmod>
     </url>
     <url>
-        <loc>http://solohsu.github.io/blog/archives/</loc>
+        <loc>http://www.solohsu.com/blog/archives/</loc>
         <lastmod>2014-04-02T16:58:49+08:00</lastmod>
     </url>
     <url>
-        <loc>http://solohsu.github.io/</loc>
+        <loc>http://www.solohsu.com/</loc>
         <lastmod>2014-04-02T16:58:49+08:00</lastmod>
     </url>
     <url>
-        <loc>http://solohsu.github.io/robots.txt</loc>
+        <loc>http://www.solohsu.com/robots.txt</loc>
         <lastmod>2014-04-02T00:52:23+08:00</lastmod>
     </url>
 </urlset>

@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://solohsu.github.io/sitemap.xml 
+Sitemap: http://www.solohsu.com/sitemap.xml 

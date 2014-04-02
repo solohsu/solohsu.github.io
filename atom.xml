@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[sOlOHsU's Blog]]></title>
-  <link href="http://solohsu.github.io/atom.xml" rel="self"/>
-  <link href="http://solohsu.github.io/"/>
-  <updated>2014-04-02T18:52:02+08:00</updated>
-  <id>http://solohsu.github.io/</id>
+  <link href="http://www.solohsu.com/atom.xml" rel="self"/>
+  <link href="http://www.solohsu.com/"/>
+  <updated>2014-04-02T19:59:19+08:00</updated>
+  <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Java 8简明教程(3): Functional Interface]]></title>
-    <link href="http://solohsu.github.io/blog/2014/04/02/java-8-functional-interface/"/>
+    <link href="http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/"/>
     <updated>2014-04-02T16:33:19+08:00</updated>
-    <id>http://solohsu.github.io/blog/2014/04/02/java-8-functional-interface</id>
+    <id>http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface</id>
     <content type="html"><![CDATA[<h3>函数式接口</h3>
 
 <p>lambda表达式是如何符合Java的类型系统的呢？每个lambda表达式对应一个指定的函数式接口。所谓的<strong>函数式接口</strong>(functional interface)必须包含且仅包含一个抽象方法。每个lambada表达式都会与对应的函数式接口中的这个抽象方法进行匹配。而由于default方法不是抽象的，所以我们可以向函数式接口中随意添加default方法。</p>
@@ -49,9 +49,9 @@
   
   <entry>
     <title type="html"><![CDATA[Java 8 简明教程(2): Lambda Expression]]></title>
-    <link href="http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression/"/>
+    <link href="http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression/"/>
     <updated>2014-04-02T15:34:54+08:00</updated>
-    <id>http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression</id>
+    <id>http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression</id>
     <content type="html"><![CDATA[<h3>Lambda 表达式</h3>
 
 <p>先来看一个对字符串数组进行排序的例子，在之前的Java版本中，我们通常这样来实现：</p>
@@ -108,9 +108,9 @@
   
   <entry>
     <title type="html"><![CDATA[Java 8 简明教程(1): Default Method]]></title>
-    <link href="http://solohsu.github.io/blog/2014/04/01/java-8-default-method/"/>
+    <link href="http://www.solohsu.com/blog/2014/04/01/java-8-default-method/"/>
     <updated>2014-04-01T23:56:29+08:00</updated>
-    <id>http://solohsu.github.io/blog/2014/04/01/java-8-default-method</id>
+    <id>http://www.solohsu.com/blog/2014/04/01/java-8-default-method</id>
     <content type="html"><![CDATA[<h3>接口的默认方法</h3>
 
 <p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。例子如下：</p>

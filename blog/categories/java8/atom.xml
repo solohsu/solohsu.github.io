@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Java8 | sOlOHsU's Blog]]></title>
-  <link href="http://solohsu.github.io/blog/categories/java8/atom.xml" rel="self"/>
-  <link href="http://solohsu.github.io/"/>
-  <updated>2014-04-02T18:52:02+08:00</updated>
-  <id>http://solohsu.github.io/</id>
+  <link href="http://www.solohsu.com/blog/categories/java8/atom.xml" rel="self"/>
+  <link href="http://www.solohsu.com/"/>
+  <updated>2014-04-02T19:59:19+08:00</updated>
+  <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Java 8 简明教程(2): Lambda Expression]]></title>
-    <link href="http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression/"/>
+    <link href="http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression/"/>
     <updated>2014-04-02T15:34:54+08:00</updated>
-    <id>http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression</id>
+    <id>http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression</id>
     <content type="html"><![CDATA[<h3>Lambda 表达式</h3>
 
 <p>先来看一个对字符串数组进行排序的例子，在之前的Java版本中，我们通常这样来实现：</p>
