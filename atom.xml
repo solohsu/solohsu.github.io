@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog]]></title>
   <link href="http://solohsu.github.io/atom.xml" rel="self"/>
   <link href="http://solohsu.github.io/"/>
-  <updated>2014-04-02T16:05:42+08:00</updated>
+  <updated>2014-04-02T16:08:51+08:00</updated>
   <id>http://solohsu.github.io/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(2):lambda Expression]]></title>
+    <title type="html"><![CDATA[Java 8 简明教程(2): Lambda Expression]]></title>
     <link href="http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression/"/>
     <updated>2014-04-02T15:34:54+08:00</updated>
     <id>http://solohsu.github.io/blog/2014/04/02/java-8-lambda-expression</id>
@@ -73,7 +73,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(1):default Method]]></title>
+    <title type="html"><![CDATA[Java 8 简明教程(1): Default Method]]></title>
     <link href="http://solohsu.github.io/blog/2014/04/01/java-8-default-method/"/>
     <updated>2014-04-01T23:56:29+08:00</updated>
     <id>http://solohsu.github.io/blog/2014/04/01/java-8-default-method</id>
