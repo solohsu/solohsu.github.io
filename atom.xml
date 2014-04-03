@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-03T17:18:07+08:00</updated>
+  <updated>2014-04-03T20:02:53+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -12,6 +12,116 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java 8 简明教程(5): Lambda Scope]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/"/>
+    <updated>2014-04-03T17:21:13+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope</id>
+    <content type="html"><![CDATA[<h3>Lambda的作用域</h3>
+
+<p>在lambda表达式中访问外部变量的方式与匿名对象相似。从lambda表达式中可以访问外部作用域中的final局部变量，外部对象的成员字段和静态变量。</p>
+
+<h4>访问局部变量</h4>
+
+<p>从lambda表达式中访问外部的final局部变量：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">final</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter</span> <span class="o">=</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">stringConverter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>     <span class="c1">// 3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是与匿名对象不同的是，<code>num</code>不必显式的声明为final变量。所以下面的代码也是正确的：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter</span> <span class="o">=</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">stringConverter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>     <span class="c1">// 3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是为了代码能成功编译，<code>num</code>必须隐含为final变量。像下面的代码就无法编译通过：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter</span> <span class="o">=</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">num</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在lambda表达式里对<code>num</code>进行写操作也是被禁止的。</p>
+
+<h4>访问字段和静态变量</h4>
+
+<p>与访问局部变量时相反，在lambda表达式内我们可以对外部对象的成员字段和静态变量进行读写操作。这个特性在匿名对象中已经广为人知了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">class</span> <span class="nc">Lambda4</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">static</span> <span class="kt">int</span> <span class="n">outerStaticNum</span><span class="o">;</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">outerNum</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="kt">void</span> <span class="nf">testScopes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter1</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">outerNum</span> <span class="o">=</span> <span class="mi">23</span><span class="o">;</span>
+</span><span class='line'>              <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
+</span><span class='line'>          <span class="o">};</span>
+</span><span class='line'>  
+</span><span class='line'>          <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter2</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">outerStaticNum</span> <span class="o">=</span> <span class="mi">72</span><span class="o">;</span>
+</span><span class='line'>              <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
+</span><span class='line'>          <span class="o">};</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>访问默认接口方法</h4>
+
+<p>还记得教程(1)中的formula的例子吗？<code>Formula</code>接口定义了一个默认的方法<code>sqrt</code>，任何一个formula的实例都可以访问这个方法，包括匿名对象在内。但在lambda表达式中这个就不适用了。</p>
+
+<p>在lambda表达式内是无法访问默认方法的。下面的代码无法通过编译：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Formula</span> <span class="n">formula</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">sqrt</span><span class="o">(</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">100</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java 8 简明教程(4): Method and Constructor References]]></title>
