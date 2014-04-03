@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-03T17:16:19+08:00</updated>
+  <updated>2014-04-03T17:18:07+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -101,8 +101,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>We create a reference to the Person constructor via Person::new. The Java compiler automatically chooses the right constructor by matching the signature of PersonFactory.create.
-我们使用<code>Person::new</code>创建了一个对<code>Person</code>类的构造器的引用。Java编译器会通过匹配<code>PersonFactory.create</code>方法的签名自动选用合适的构造器。</p>
+<p>我们使用<code>Person::new</code>创建了一个对<code>Person</code>类的构造器的引用。Java编译器会通过匹配<code>PersonFactory.create</code>方法的签名自动选用合适的构造器。</p>
 ]]></content>
   </entry>
   
