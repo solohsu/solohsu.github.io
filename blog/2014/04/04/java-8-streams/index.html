@@ -295,6 +295,87 @@
 </span><span class='line'>  <span class="c1">// &quot;aaa1#aaa2#bbb1#bbb2#bbb3#ccc#ddd1#ddd2&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h3>Parallel Streams</h3>
+
+<p>上面提到了streams分为串行和并行两类。串行streams中的操作都是在一个线程中执行的，而并行sterams上的操作是在多个线程中并发执行的。</p>
+
+<p>下面的例子向我们展示了使用并行streams来提升性能是如此的简单。</p>
+
+<p>首先创建一个没有重复元素的大数组。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">max</span><span class="o">);</span>
+</span><span class='line'>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">UUID</span> <span class="n">uuid</span> <span class="o">=</span> <span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">();</span>
+</span><span class='line'>      <span class="n">values</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">uuid</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接下来我们来测一下对这个数组的stream进行排序所消耗的时间。</p>
+
+<h4>串行排序</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">long</span> <span class="n">t0</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">sorted</span><span class="o">().</span><span class="na">count</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">millis</span> <span class="o">=</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">NANOSECONDS</span><span class="o">.</span><span class="na">toMillis</span><span class="o">(</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;sequential sort took: %d ms&quot;</span><span class="o">,</span> <span class="n">millis</span><span class="o">));</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">// sequential sort took: 899 ms</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>并行排序</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">long</span> <span class="n">t0</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="na">parallelStream</span><span class="o">().</span><span class="na">sorted</span><span class="o">().</span><span class="na">count</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">millis</span> <span class="o">=</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">NANOSECONDS</span><span class="o">.</span><span class="na">toMillis</span><span class="o">(</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;parallel sort took: %d ms&quot;</span><span class="o">,</span> <span class="n">millis</span><span class="o">));</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">// parallel sort took: 472 ms</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到两段代码基本完全相同，但是并行排序并串行排序快了大约50%。差别仅是把<code>stream()</code>替换成了<code>parallelStream()</code>。</p>
 </div>
 
 
