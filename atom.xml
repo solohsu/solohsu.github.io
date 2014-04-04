@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-04T10:57:34+08:00</updated>
+  <updated>2014-04-04T11:00:56+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(8): Streams]]></title>
+    <title type="html"><![CDATA[Java 8 简明教程(7): Streams]]></title>
     <link href="http://www.solohsu.com/blog/2014/04/04/java-8-streams/"/>
     <updated>2014-04-04T09:43:47+08:00</updated>
     <id>http://www.solohsu.com/blog/2014/04/04/java-8-streams</id>
