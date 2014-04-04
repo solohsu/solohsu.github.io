@@ -110,6 +110,9 @@
 
 <p><code>java.util.Stream</code>表示一个多元素的数列，在上面可以进行一项或者多项操作。Stream操作分为两种，一种是intermediate操作，一种是terminal操作。terminal操作返回的是某一特定类型的结果，而intermediate操作返回的stream对象本身，这样以来我们就可以在一行中将多个方法链接起来。Streams创建的时候必须指定一个source，例如<code>java.util.Collection</code>中的lists或者sets（maps是不被支持的）。Streams操作既可以是串行的也可以是并行的。</p>
 
+<!--more-->
+
+
 <p>首先来看一个串行执行streams操作的例子，这个例子中的source是一个string数组：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

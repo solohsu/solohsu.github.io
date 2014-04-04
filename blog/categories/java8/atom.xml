@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java8 | sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/blog/categories/java8/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-04T15:52:10+08:00</updated>
+  <updated>2014-04-04T16:26:18+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -55,6 +55,9 @@
 <p>静态方法<code>Collections.sort</code>接受一个数组和一个比较器来对这个数组进行排序。因而我们经常需要创建一个匿名的比较器并把它传递给<code>sort</code>方法。</p>
 
 <p>为了避免整天没完没了的创建匿名对象，Java 8使用了一种更简洁的语法，lambda表达式：</p>
+
+<!--more-->
+
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
