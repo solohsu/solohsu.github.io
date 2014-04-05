@@ -2,39 +2,43 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/01/java-8-default-method/</loc>
-        <lastmod>2014-04-04T16:24:42+08:00</lastmod>
+        <lastmod>2014-04-05T15:20:05+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression/</loc>
-        <lastmod>2014-04-04T16:25:27+08:00</lastmod>
+        <lastmod>2014-04-05T15:21:09+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/</loc>
-        <lastmod>2014-04-04T16:24:54+08:00</lastmod>
+        <lastmod>2014-04-05T15:20:19+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/03/java-8-method-and-constructor-ref/</loc>
-        <lastmod>2014-04-04T16:26:17+08:00</lastmod>
+        <lastmod>2014-04-05T15:22:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/</loc>
-        <lastmod>2014-04-04T16:26:03+08:00</lastmod>
+        <lastmod>2014-04-05T15:21:31+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/03/java-8-built-in-functional-interface/</loc>
-        <lastmod>2014-04-04T16:25:47+08:00</lastmod>
+        <lastmod>2014-04-05T15:21:22+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/04/java-8-streams/</loc>
-        <lastmod>2014-04-04T16:18:35+08:00</lastmod>
+        <lastmod>2014-04-05T15:22:38+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://www.solohsu.com/blog/2014/04/04/java-8-map/</loc>
+        <lastmod>2014-04-05T15:19:17+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/archives/</loc>
-        <lastmod>2014-04-04T16:26:17+08:00</lastmod>
+        <lastmod>2014-04-05T15:22:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/</loc>
-        <lastmod>2014-04-04T16:26:17+08:00</lastmod>
+        <lastmod>2014-04-05T15:22:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/robots.txt</loc>

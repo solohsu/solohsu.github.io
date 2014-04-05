@@ -9,13 +9,13 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="接口的默认方法 Java 8 中我们可以利用 default 关键字来为接口添加非抽象方法。这个特性也被称为扩展方法。例子如下： 1
+  <meta name="description" content="接口的默认方法 Java 8 中我们可以利用 default 关键字来为接口添加非抽象方法。这个特性也被称为扩展方法。 例子如下： 1
 2
 3
 4
 5
 6
-7 interface Formula { double calculate(int a); default double sqrt(int a &hellip;">
+7 interface Formula { double calculate(int a); default double sqrt(int &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -114,7 +114,12 @@
 
 <div class="entry-content"><h3>接口的默认方法</h3>
 
-<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。例子如下：</p>
+<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。</p>
+
+<!--more-->
+
+
+<p>例子如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -131,11 +136,6 @@
 </span><span class='line'>      <span class="o">}</span>
 </span><span class='line'>  <span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
 
 
 <p>除了<code>calculate</code>方法这个抽象方法之外，<code>Formula</code>接口还定义了一个默认方法<code>sqrt</code>，接口的实现类只需要实现抽象方法<code>calculate</code>，而默认方法<code>sqrt</code>是直接可以拿来用的。</p>
@@ -198,10 +198,15 @@
     
       <div class="sharing">
   
+  
+  
   <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/01/java-8-default-method/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/01/java-8-default-method/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
+  
+  
+  
   
   
 </div>
@@ -231,6 +236,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/04/java-8-streams/">Java 8 简明教程(7): Streams</a>
       </li>
     
@@ -246,12 +255,9 @@
         <a href="/blog/2014/04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/02/java-8-functional-interface/">Java 8 简明教程(3): Functional Interface</a>
-      </li>
-    
   </ul>
 </section>
+
 
 
 

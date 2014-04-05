@@ -110,10 +110,10 @@
 
 <p>lambda表达式是如何符合Java的类型系统的呢？每个lambda表达式对应一个指定的函数式接口。所谓的<strong>函数式接口</strong>(functional interface)必须包含且仅包含一个抽象方法。每个lambada表达式都会与对应的函数式接口中的这个抽象方法进行匹配。而由于default方法不是抽象的，所以我们可以向函数式接口中随意添加default方法。</p>
 
-<p>只要一个接口只含有一个抽象方法，我们就可以将它用作lambda表达式。我们可以使用<code>@FunctionalInterface</code>注解来确保我们的接口能够满足这一需求。当我们尝试向添加了此注解的接口中添加第二个抽象方法时，编译器会提示存在编译错误。</p>
-
 <!--more-->
 
+
+<p>只要一个接口只含有一个抽象方法，我们就可以将它用作lambda表达式。我们可以使用<code>@FunctionalInterface</code>注解来确保我们的接口能够满足这一需求。当我们尝试向添加了此注解的接口中添加第二个抽象方法时，编译器会提示存在编译错误。</p>
 
 <p>例子：</p>
 
@@ -124,12 +124,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@FunctionalInterface</span>
-</span><span class='line'>  <span class="kd">interface</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@FunctionalInterface</span>s</span><span class='line'>  <span class="kd">interface</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
 </span><span class='line'>      <span class="n">T</span> <span class="nf">convert</span><span class="o">(</span><span class="n">F</span> <span class="n">from</span><span class="o">);</span>
 </span><span class='line'>  <span class="o">}</span>
 </span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
-</span><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
+</sp=n><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
 </span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>    <span class="c1">// 123</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -171,10 +170,15 @@
     
       <div class="sharing">
   
+  
+  
   <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
+  
+  
+  
   
   
 </div>
@@ -185,8 +189,7 @@
         <a class="basic-alignment left" href="/blog/2014/04/02/java-8-lambda-expression/" title="Previous Post: Java 8 简明教程(2): lambda expression">&laquo; Java 8 简明教程(2): lambda expression</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/04/03/java-8-method-and-constructor-ref/" title="Next Post: Java 8 简明教程(4): method and constructor references">Java 8 简明教程(4): method and constructor references &raquo;</a>
-      
+        <a class="basic-alignment right" href="/blog/2014/04/03/java-8-method-and-constructor-ref/" title="Next Post: Java 8 简明教程(4): method and constructor references">Java 8 简明教程(4): method and constructor references &raquo;</a>et      
     </p>
   </footer>
 </article>
@@ -206,6 +209,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/04/java-8-streams/">Java 8 简明教程(7): Streams</a>
       </li>
     
@@ -218,15 +225,12 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2014/04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/02/java-8-functional-interface/">Java 8 简明教程(3): Functional Interface</a>
+        <a href="/blog/201):04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a>
       </li>
     
   </ul>
 </section>
+
 
 
 
@@ -258,7 +262,7 @@
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
       dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      (document.getElementsByTagName('head')[0] || document.getElemiptsByTagName('body')[0]).appendChild(dsq);
     }());
 </script>
 

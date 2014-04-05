@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-04T16:26:18+08:00</updated>
+  <updated>2014-04-05T15:54:40+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -14,13 +14,120 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Java 8 简明教程(8): Map]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/04/java-8-map/"/>
+    <updated>2014-04-04T17:03:54+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/04/java-8-map</id>
+    <content type="html"><![CDATA[<h3>Map</h3>
+
+<p>虽然map是不支持stream的。但是Java 8中为map增加了多种很有用的方法，方便我们执行各种针对map的常见任务。</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">map</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="s">&quot;val&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">id</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">val</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码很简明：<code>putIfAbsent</code>方法使我们不用再写额外的if null检查语句了；<code>forEach</code>方法接受一个「消费者」，对map中的每一个值执行相应操作。</p>
+
+<p>下面的例子展示了如何使用函数来对指定的value进行计算：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">map</span><span class="o">.</span><span class="na">computeIfPresent</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">val</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// val33</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">computeIfPresent</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span> <span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>     <span class="c1">// false</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="mi">23</span><span class="o">,</span> <span class="n">num</span> <span class="o">-&gt;</span> <span class="s">&quot;val&quot;</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="mi">23</span><span class="o">);</span>    <span class="c1">// true</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="n">num</span> <span class="o">-&gt;</span> <span class="s">&quot;bam&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// val33</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面来看一下如何移除完全匹配给定的key/value的entries：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> 
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;val3&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// val33</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;val33&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// null</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外一个很有用的方法：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> 
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="mi">42</span><span class="o">,</span> <span class="s">&quot;not found&quot;</span><span class="o">);</span>  <span class="c1">// not found</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>进行entries的合并也非常简单：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> 
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span> <span class="s">&quot;val9&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">newValue</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">value</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">newValue</span><span class="o">));</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>             <span class="c1">// val9</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span> <span class="s">&quot;concat&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">newValue</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">value</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">newValue</span><span class="o">));</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>             <span class="c1">// val9concat</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>merge</code>方法在给定的key不存在时，将key/value添加进map中，否则对现有的value进行修改。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Java 8 简明教程(7): Streams]]></title>
     <link href="http://www.solohsu.com/blog/2014/04/04/java-8-streams/"/>
     <updated>2014-04-04T09:43:47+08:00</updated>
     <id>http://www.solohsu.com/blog/2014/04/04/java-8-streams</id>
     <content type="html"><![CDATA[<h3>Streams</h3>
 
-<p><code>java.util.Stream</code>表示一个多元素的数列，在上面可以进行一项或者多项操作。Stream操作分为两种，一种是intermediate操作，一种是terminal操作。terminal操作返回的是某一特定类型的结果，而intermediate操作返回的stream对象本身，这样以来我们就可以在一行中将多个方法链接起来。Streams创建的时候必须指定一个source，例如<code>java.util.Collection</code>中的lists或者sets（maps是不被支持的）。Streams操作既可以是串行的也可以是并行的。</p>
+<p><code>java.util.Stream</code>表示一个多元素的数组，在上面可以进行一项或者多项操作。Stream操作分为两种，一种是intermediate操作，一种是terminal操作。terminal操作返回的是某一特定类型的结果，而intermediate操作返回的stream对象本身，这样以来我们就可以在一行中将多个方法链接起来。Streams创建的时候必须指定一个source，例如<code>java.util.Collection</code>中的lists或者sets（maps是不被支持的）。Streams操作既可以是串行的也可以是并行的。</p>
 
 <!--more-->
 
@@ -303,10 +410,10 @@
 
 <p>JDK 1.8 的API中包含很多内置的函数式接口。它们中有些从旧版本就开始被人们所熟知，如<code>Comparator</code>，<code>Runnable</code>。这些现存的接口通过添加<code>@FunctionalInterface</code>注解进行扩展，以提供对lambda的支持。</p>
 
-<p>Java 8的API同样拥有大量的函数式接口。许多接口都来自著名的Google Guava library。就算你对这个库不熟悉，你也应该去研究研究这些接口是如何进行的方法扩展。</p>
-
 <!--more-->
 
+
+<p>Java 8的API同样拥有大量的函数式接口。许多接口都来自著名的Google Guava library。就算你对这个库不熟悉，你也应该去研究研究这些接口是如何进行的方法扩展。</p>
 
 <h4>Predicates</h4>
 
@@ -427,6 +534,9 @@
 
 <p>在lambda表达式中访问外部变量的方式与匿名对象相似。从lambda表达式中可以访问外部作用域中的final局部变量，外部对象的成员字段和静态变量。</p>
 
+<!--more-->
+
+
 <h4>访问局部变量</h4>
 
 <p>从lambda表达式中访问外部的final局部变量：</p>
@@ -442,11 +552,6 @@
 </span><span class='line'>  
 </span><span class='line'>  <span class="n">stringConverter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>     <span class="c1">// 3</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
 
 
 <p>但是与匿名对象不同的是，<code>num</code>不必显式的声明为final变量。所以下面的代码也是正确的：</p>
@@ -542,6 +647,11 @@
 
 <p>上个教程中的例子可以通过使用静态方法的引用来进一步简化：</p>
 
+<!--more-->
+
+
+
+
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -552,11 +662,6 @@
 
 
 <p>Java 8 中可以使用<code>::</code>关键字来传递对方法或构造器的引用。上面的例子展示了如何引用一个静态方法。同样我们也可以引用对象中的方法:</p>
-
-<!--more-->
-
-
-
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -639,10 +744,10 @@
 
 <p>lambda表达式是如何符合Java的类型系统的呢？每个lambda表达式对应一个指定的函数式接口。所谓的<strong>函数式接口</strong>(functional interface)必须包含且仅包含一个抽象方法。每个lambada表达式都会与对应的函数式接口中的这个抽象方法进行匹配。而由于default方法不是抽象的，所以我们可以向函数式接口中随意添加default方法。</p>
 
-<p>只要一个接口只含有一个抽象方法，我们就可以将它用作lambda表达式。我们可以使用<code>@FunctionalInterface</code>注解来确保我们的接口能够满足这一需求。当我们尝试向添加了此注解的接口中添加第二个抽象方法时，编译器会提示存在编译错误。</p>
-
 <!--more-->
 
+
+<p>只要一个接口只含有一个抽象方法，我们就可以将它用作lambda表达式。我们可以使用<code>@FunctionalInterface</code>注解来确保我们的接口能够满足这一需求。当我们尝试向添加了此注解的接口中添加第二个抽象方法时，编译器会提示存在编译错误。</p>
 
 <p>例子：</p>
 
@@ -676,6 +781,11 @@
 
 <p>先来看一个对字符串数组进行排序的例子，在之前的Java版本中，我们通常这样来实现：</p>
 
+<!--more-->
+
+
+
+
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -698,11 +808,6 @@
 <p>静态方法<code>Collections.sort</code>接受一个数组和一个比较器来对这个数组进行排序。因而我们经常需要创建一个匿名的比较器并把它传递给<code>sort</code>方法。</p>
 
 <p>为了避免整天没完没了的创建匿名对象，Java 8使用了一种更简洁的语法，lambda表达式：</p>
-
-<!--more-->
-
-
-
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -738,7 +843,12 @@
     <id>http://www.solohsu.com/blog/2014/04/01/java-8-default-method</id>
     <content type="html"><![CDATA[<h3>接口的默认方法</h3>
 
-<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。例子如下：</p>
+<p>Java 8 中我们可以利用 <code>default</code> 关键字来为接口添加非抽象方法。这个特性也被称为<strong>扩展方法</strong>。</p>
+
+<!--more-->
+
+
+<p>例子如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -755,11 +865,6 @@
 </span><span class='line'>      <span class="o">}</span>
 </span><span class='line'>  <span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
 
 
 <p>除了<code>calculate</code>方法这个抽象方法之外，<code>Formula</code>接口还定义了一个默认方法<code>sqrt</code>，接口的实现类只需要实现抽象方法<code>calculate</code>，而默认方法<code>sqrt</code>是直接可以拿来用的。</p>

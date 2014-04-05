@@ -102,9 +102,6 @@
 
 <time datetime="2014-04-03T17:21:13+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
         
-           | <a href="#disqus_thread"
-             data-disqus-identifier="http://www.solohsu.com">Comments</a>
-        
       </p>
     
   </header>
@@ -113,6 +110,9 @@
 <div class="entry-content"><h3>Lambda的作用域</h3>
 
 <p>在lambda表达式中访问外部变量的方式与匿名对象相似。从lambda表达式中可以访问外部作用域中的final局部变量，外部对象的成员字段和静态变量。</p>
+
+<!--more-->
+
 
 <h4>访问局部变量</h4>
 
@@ -129,11 +129,6 @@
 </span><span class='line'>  
 </span><span class='line'>  <span class="n">stringConverter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>     <span class="c1">// 3</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
 
 
 <p>但是与匿名对象不同的是，<code>num</code>不必显式的声明为final变量。所以下面的代码也是正确的：</p>
@@ -253,10 +248,36 @@
     
       <div class="sharing">
   
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tools_1"></a>
+		<a class="jiathis_button_tools_2"></a>
+		<a class="jiathis_button_tools_3"></a>
+		<a class="jiathis_button_tools_4"></a>
+		<a href="http://www.jiathis.com/share?uid=1912803" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+		<a class="jiathis_counter_style"></a>
+	</div>
+	<script type="text/javascript">
+	var jiathis_config = {data_track_clickback:'true'};
+	</script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1395495230719339" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+  
+  
+  
   <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
+  
+  
+  
+  
+    <!-- UY BEGIN -->
+	<div id="uyan_frame"></div>
+	<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1912803"></script>
+	<!-- UY END -->
   
   
 </div>
@@ -273,12 +294,6 @@
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
@@ -286,6 +301,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/04/java-8-streams/">Java 8 简明教程(7): Streams</a>
@@ -303,12 +322,9 @@
         <a href="/blog/2014/04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/02/java-8-functional-interface/">Java 8 简明教程(3): Functional Interface</a>
-      </li>
-    
   </ul>
 </section>
+
 
 
 
@@ -327,22 +343,6 @@
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'solohsu';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/';
-        var disqus_url = 'http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 
@@ -364,6 +364,17 @@
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
       twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
+tform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
