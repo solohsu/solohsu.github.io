@@ -98,9 +98,6 @@
 
 <time datetime="2014-04-02T16:33:19+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2014</time>
         
-           | <a href="#disqus_thread"
-             data-disqus-identifier="http://www.solohsu.com">Comments</a>
-        
       </p>
     
   </header>
@@ -124,11 +121,12 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@FunctionalInterface</span>s</span><span class='line'>  <span class="kd">interface</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@FunctionalInterface</span>
+</span><span class='line'>  <span class="kd">interface</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
 </span><span class='line'>      <span class="n">T</span> <span class="nf">convert</span><span class="o">(</span><span class="n">F</span> <span class="n">from</span><span class="o">);</span>
 </span><span class='line'>  <span class="o">}</span>
 </span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
-</sp=n><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
 </span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>    <span class="c1">// 123</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -169,8 +167,7 @@
     </p>
     
       <div class="sharing">
-  
-  
+
   
   <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/" >Tweet</a>
   
@@ -178,7 +175,30 @@
   <div class="g-plusone" data-size="medium"></div>
   
   
+
   
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tools_1"></a>
+		<a class="jiathis_button_tools_2"></a>
+		<a class="jiathis_button_tools_3"></a>
+		<a class="jiathis_button_tools_4"></a>
+		<a href="http://www.jiathis.com/share?uid=1912803" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+		<a class="jiathis_counter_style"></a>
+	</div>
+	<script type="text/javascript">
+	var jiathis_config = {data_track_clickback:'true'};
+	</script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1395495230719339" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+  
+  
+  
+    <!-- UY BEGIN -->
+	<div id="uyan_frame"></div>
+	<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1912803"></script>
+	<!-- UY END -->
   
   
 </div>
@@ -189,16 +209,11 @@
         <a class="basic-alignment left" href="/blog/2014/04/02/java-8-lambda-expression/" title="Previous Post: Java 8 简明教程(2): lambda expression">&laquo; Java 8 简明教程(2): lambda expression</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/04/03/java-8-method-and-constructor-ref/" title="Next Post: Java 8 简明教程(4): method and constructor references">Java 8 简明教程(4): method and constructor references &raquo;</a>et      
+        <a class="basic-alignment right" href="/blog/2014/04/03/java-8-method-and-constructor-ref/" title="Next Post: Java 8 简明教程(4): method and constructor references">Java 8 简明教程(4): method and constructor references &raquo;</a>
+      
     </p>
   </footer>
 </article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
 
 </div>
 
@@ -225,7 +240,7 @@
       </li>
     
       <li class="post">
-        <a href="/blog/201):04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a>
+        <a href="/blog/2014/04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a>
       </li>
     
   </ul>
@@ -249,22 +264,6 @@
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'solohsu';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/';
-        var disqus_url = 'http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElemiptsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 
