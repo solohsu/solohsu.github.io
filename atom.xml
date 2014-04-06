@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-05T17:34:23+08:00</updated>
+  <updated>2014-04-06T15:18:48+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -12,6 +12,223 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java 8 简明教程(9): Date API]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/06/java-8-date-api/"/>
+    <updated>2014-04-06T00:42:44+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/06/java-8-date-api</id>
+    <content type="html"><![CDATA[<h3>Date API</h3>
+
+<p>在Java 8的java.time包中包含了一组全新的date和time相关的API。新的Date API与Joda-Time库很类似，但是并不完全一样。在下面的示例中将看到新API中的最重要的部分是如何使用的。</p>
+
+<!--more-->
+
+
+<h4>Clock</h4>
+
+<p><code>Clock</code>用来获取当前的date和time。<code>Clock</code>可以区分不同时区，也可以用来代替<code>System.currentTimeMillis()</code>来获取当前的毫秒数。作为一个时间线上的一点，当前的毫秒数也可以使用<code>Instant</code>类来表示。<code>Instant</code>可以被用来创建遗留的<code>java.util.Date</code>对象。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Clock</span> <span class="n">clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="o">.</span><span class="na">systemDefaultZone</span><span class="o">();</span>
+</span><span class='line'>  <span class="kt">long</span> <span class="n">millis</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="na">millis</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">Instant</span> <span class="n">instant</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="na">instant</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">Date</span> <span class="n">legacyDate</span> <span class="o">=</span> <span class="n">Date</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">instant</span><span class="o">);</span>   <span class="c1">// legacy java.util.Date</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Timezones</h4>
+
+<p>时区使用一个<code>ZoneId</code>对象来表示，可以使用<code>ZoneId</code>的静态工厂方法很方便的获取一个时区对象。时区实际上就是定义了一个偏移量，这个偏移量在进行instant与本地的date、time进行转换时很重要。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">getAvailableZoneIds</span><span class="o">());</span>
+</span><span class='line'>  <span class="c1">// prints all available timezone ids</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">ZoneId</span> <span class="n">zone1</span> <span class="o">=</span> <span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&quot;Europe/Berlin&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">ZoneId</span> <span class="n">zone2</span> <span class="o">=</span> <span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&quot;Brazil/East&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">zone1</span><span class="o">.</span><span class="na">getRules</span><span class="o">());</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">zone2</span><span class="o">.</span><span class="na">getRules</span><span class="o">());</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">// ZoneRules[currentStandardOffset=+01:00]</span>
+</span><span class='line'>  <span class="c1">// ZoneRules[currentStandardOffset=-03:00]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>LocalTime</h4>
+
+<p><code>LocalTime</code>表示一个无时区的时间，例如 10pm 或者 17:30:15。下面的例子中分别为上面定义的两个timezone创建了一个localtime，然后对两个时间进行比较，并计算小时和分钟的差值。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">LocalTime</span> <span class="n">now1</span> <span class="o">=</span> <span class="n">LocalTime</span><span class="o">.</span><span class="na">now</span><span class="o">(</span><span class="n">zone1</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">LocalTime</span> <span class="n">now2</span> <span class="o">=</span> <span class="n">LocalTime</span><span class="o">.</span><span class="na">now</span><span class="o">(</span><span class="n">zone2</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">now1</span><span class="o">.</span><span class="na">isBefore</span><span class="o">(</span><span class="n">now2</span><span class="o">));</span>  <span class="c1">// false</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">hoursBetween</span> <span class="o">=</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">HOURS</span><span class="o">.</span><span class="na">between</span><span class="o">(</span><span class="n">now1</span><span class="o">,</span> <span class="n">now2</span><span class="o">);</span>
+</span><span class='line'>  <span class="kt">long</span> <span class="n">minutesBetween</span> <span class="o">=</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">MINUTES</span><span class="o">.</span><span class="na">between</span><span class="o">(</span><span class="n">now1</span><span class="o">,</span> <span class="n">now2</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">hoursBetween</span><span class="o">);</span>       <span class="c1">// -3</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">minutesBetween</span><span class="o">);</span>     <span class="c1">// -239</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>LocalTime</code>自带了各种工厂方法来简化实例的创建，其中就包括解析时间字符串。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">LocalTime</span> <span class="n">late</span> <span class="o">=</span> <span class="n">LocalTime</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">23</span><span class="o">,</span> <span class="mi">59</span><span class="o">,</span> <span class="mi">59</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">late</span><span class="o">);</span>       <span class="c1">// 23:59:59</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">DateTimeFormatter</span> <span class="n">germanFormatter</span> <span class="o">=</span>
+</span><span class='line'>      <span class="n">DateTimeFormatter</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">ofLocalizedTime</span><span class="o">(</span><span class="n">FormatStyle</span><span class="o">.</span><span class="na">SHORT</span><span class="o">)</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">withLocale</span><span class="o">(</span><span class="n">Locale</span><span class="o">.</span><span class="na">GERMAN</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">LocalTime</span> <span class="n">leetTime</span> <span class="o">=</span> <span class="n">LocalTime</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;13:37&quot;</span><span class="o">,</span> <span class="n">germanFormatter</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">leetTime</span><span class="o">);</span>   <span class="c1">// 13:37</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>LocalDate</h4>
+
+<p><code>LocalDate</code>表示一个明确的日期。它是不可变的，工作方式与<code>LocalTime</code>类似。下面的例子演示了如何通过加/减天数、月数、年数来计算新的日期。需要注意的是每次操作返回的都是一个新的实例。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">LocalDate</span> <span class="n">today</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">now</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">LocalDate</span> <span class="n">tomorrow</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">DAYS</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">LocalDate</span> <span class="n">yesterday</span> <span class="o">=</span> <span class="n">tomorrow</span><span class="o">.</span><span class="na">minusDays</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">LocalDate</span> <span class="n">independenceDay</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">2014</span><span class="o">,</span> <span class="n">Month</span><span class="o">.</span><span class="na">JULY</span><span class="o">,</span> <span class="mi">4</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">DayOfWeek</span> <span class="n">dayOfWeek</span> <span class="o">=</span> <span class="n">independenceDay</span><span class="o">.</span><span class="na">getDayOfWeek</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">dayOfWeek</span><span class="o">);</span>    <span class="c1">// FRIDAY</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同样可以将字符串解析成一个LocalDate对象：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">DateTimeFormatter</span> <span class="n">germanFormatter</span> <span class="o">=</span>
+</span><span class='line'>      <span class="n">DateTimeFormatter</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">ofLocalizedDate</span><span class="o">(</span><span class="n">FormatStyle</span><span class="o">.</span><span class="na">MEDIUM</span><span class="o">)</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">withLocale</span><span class="o">(</span><span class="n">Locale</span><span class="o">.</span><span class="na">GERMAN</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">LocalDate</span> <span class="n">xmas</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;24.12.2014&quot;</span><span class="o">,</span> <span class="n">germanFormatter</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">xmas</span><span class="o">);</span>   <span class="c1">// 2014-12-24</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>LocalDateTime</h4>
+
+<p><code>LocalDateTime</code>表示一个date-time。它将date和time放到一个对象中。<code>LocalDateTime</code>是不可变的，工作方式和<code>LocalTime</code>,<code>LocalDate</code>也类似。我们可以利用方法来获取date-time中的各个字段：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">LocalDateTime</span> <span class="n">sylvester</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">2014</span><span class="o">,</span> <span class="n">Month</span><span class="o">.</span><span class="na">DECEMBER</span><span class="o">,</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">23</span><span class="o">,</span> <span class="mi">59</span><span class="o">,</span> <span class="mi">59</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">DayOfWeek</span> <span class="n">dayOfWeek</span> <span class="o">=</span> <span class="n">sylvester</span><span class="o">.</span><span class="na">getDayOfWeek</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">dayOfWeek</span><span class="o">);</span>      <span class="c1">// WEDNESDAY</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">Month</span> <span class="n">month</span> <span class="o">=</span> <span class="n">sylvester</span><span class="o">.</span><span class="na">getMonth</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">month</span><span class="o">);</span>          <span class="c1">// DECEMBER</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kt">long</span> <span class="n">minuteOfDay</span> <span class="o">=</span> <span class="n">sylvester</span><span class="o">.</span><span class="na">getLong</span><span class="o">(</span><span class="n">ChronoField</span><span class="o">.</span><span class="na">MINUTE_OF_DAY</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">minuteOfDay</span><span class="o">);</span>    <span class="c1">// 1439</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>给定一个时区信息的话可以将它转换成一个instant对象。然后可以将<code>Instant</code>对象转换成遗留的时间对象<code>java.util.Date</code>。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Instant</span> <span class="n">instant</span> <span class="o">=</span> <span class="n">sylvester</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">atZone</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">systemDefault</span><span class="o">())</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">toInstant</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">Date</span> <span class="n">legacyDate</span> <span class="o">=</span> <span class="n">Date</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">instant</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">legacyDate</span><span class="o">);</span>     <span class="c1">// Wed Dec 31 23:59:59 CET 2014</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>date-time的格式化与date、time的格式化类似。除了使用预定义的格式之外，我们还可以使用自定义的pattern创建新的formatter对象：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span>
+</span><span class='line'>      <span class="n">DateTimeFormatter</span>
+</span><span class='line'>          <span class="o">.</span><span class="na">ofPattern</span><span class="o">(</span><span class="s">&quot;MMM dd, yyyy - HH:mm&quot;</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">LocalDateTime</span> <span class="n">parsed</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&quot;Nov 03, 2014 - 07:13&quot;</span><span class="o">,</span> <span class="n">formatter</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">String</span> <span class="n">string</span> <span class="o">=</span> <span class="n">formatter</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">parsed</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">string</span><span class="o">);</span>     <span class="c1">// Nov 03, 2014 - 07:13</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>与<code>java.text.NumberFormat</code>不同的是，新创建的<code>DateTimeFormatter</code>对象是不可更改并且线程安全的。</p>
+
+<p>关于pattern语法的详细信息参看<a href="http://download.java.net/jdk8/docs/api/java/time/format/DateTimeFormatter.html">官方文档</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java 8 简明教程(8): Map]]></title>
