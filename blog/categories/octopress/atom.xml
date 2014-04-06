@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Octopress | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://www.solohsu.com/"/>
+  <updated>2014-04-06T21:05:43+08:00</updated>
+  <id>http://www.solohsu.com/</id>
+  <author>
+    <name><![CDATA[Solo Hsu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress自定义修改记录]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/06/octopress-custom-modifications/"/>
+    <updated>2014-04-06T16:46:35+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/06/octopress-custom-modifications</id>
+    <content type="html"><![CDATA[<p>按照<a href="http://octopress.org/docs/">官方教程</a>部署好Octopress后，如果想要支持中文blog的书写，需要修改以下几个地方：</p>
+
+<h3>环境变量</h3>
+
+<p>如果在Windows操作系统下，需要添加两个环境变量：</p>
+
+<ul>
+<li>LANG = zh_CN.UTF-8</li>
+<li>LC_ALL = zh_CN.UTF-8</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h3>Jekyll</h3>
+
+<p>修改<code>{ruby_home}\lib\ruby\gems\1.9.1\gems\jekyll-0.12.0\lib\jekyll\convertible.rb</code>，强制使用UTF-8格式：</p>
+
+<p><div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=convertible.rb.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
+<noscript><pre><code>@@ -25,7 +25,7 @@ def to_s
+     #
+     # Returns nothing.
+     def read_yaml(base, name)
+-      self.content = File.read(File.join(base, name))
++      self.content = File.read(File.join(base, name), :encoding =&gt; 'utf-8')
+ 
+       begin
+         if self.content =~ /\A(---\s*\n.*?\n?)^(---\s*$\n?)/m</code></pre></noscript></div>
+</p>
+
+<p>其他的一些修改：</p>
+
+<h3>提交时间</h3>
+
+<p>运行<code>rake deploy</code>时，在Rakefile中可以找到默认的提交信息是「Site updated at #{Time.now.utc}」，这里的时间是UTC时间，将<code>Time.now.utc</code>改为<code>Time.now</code>可以改为本地时间。</p>
+
+<p><div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=Rakefile.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
+<noscript><pre><code>@@ -261,8 +261,8 @@ multitask :push do
+    cp_r &quot;#{public_dir}/.&quot;, deploy_dir
+    cd &quot;#{deploy_dir}&quot; do
+      system &quot;git add -A&quot;
+ -    puts &quot;\n## Committing: Site updated at #{Time.now.utc}&quot;
+ -    message = &quot;Site updated at #{Time.now.utc}&quot;
+ +    puts &quot;\n## Committing: Site updated at #{Time.now}&quot;
+ +    message = &quot;Site updated at #{Time.now}&quot;
+      system &quot;git commit -m \&quot;#{message}\&quot;&quot;
+      puts &quot;\n## Pushing generated #{deploy_dir} website&quot;
+      system &quot;git push origin #{deploy_branch}&quot;</code></pre></noscript></div>
+</p>
+
+<h3>JiaThis插件</h3>
+
+<p>添加JiaThis分享插件后，会发现在分享工具条左下角出现一个小白框，遮挡住了「分」字，影响视觉效果。Google了一下发现了解决方案：</p>
+
+<p>修改<code>octopress\source\javascripts\octopress.js</code>：</p>
+
+<p><div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=octopress.js.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
+<noscript><pre><code>@@ -94,7 +94,9 @@ function flashVideoFallback(){
+  function wrapFlashVideos() {
+    $('object').each(function(i, object) {
+      if( $(object).find('param[name=movie]').length ){
+ -      $(object).wrap('&lt;div class=&quot;flash-video&quot;&gt;')
+ +		if ($(object).attr('id') != &quot;JIATHISSWF&quot;) {
+ +			$(object).wrap('&lt;div class=&quot;flash-video&quot;&gt;')
+ +		}
+      }
+    });
+    $('iframe[src*=vimeo],iframe[src*=youtube]').wrap('&lt;div class=&quot;flash-video&quot;&gt;')</code></pre></noscript></div>
+</p>
+
+<p>解决方案源地址：<a href="http://geeksavetheworld.com/blog/2012/11/05/add-jiathis-to-octopress-blog/">http://geeksavetheworld.com/blog/2012/11/05/add-jiathis-to-octopress-blog/</a></p>
+
+<h3>列表缩进样式</h3>
+
+<p>默认的css样式文件中，markdown的列表是没有进行缩进处理的，看着比较别扭。找到<code>octopress\sass\custom\_layout.scss</code>，去掉<code>//$indented-lists: true;</code>这一行的注释符号，重新<code>rake generate</code>就可以了。</p>
+
+<p><div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=_layout.scss.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
+<noscript><pre><code>@@ -6,7 +6,7 @@
+  //$header-padding-bottom: 1.5em;
+  
+  //$max-width: 1350px;
+- //$indented-lists: true;
++ $indented-lists: true;
+  
+  // Padding used for layout margins
+  //$pad-min: 18px;</code></pre></noscript></div>
+</p>
+
+<h3>Gist tag</h3>
+
+<p>修复Gist tag的样式。参见：<a href="http://devspade.com/blog/2013/08/06/fixing-gist-embeds-in-octopress/">http://devspade.com/blog/2013/08/06/fixing-gist-embeds-in-octopress/</a></p>
+
+<h3>Codeblock插件</h3>
+
+<p>现在<a href="https://github.com/imathis/octopress">官方Github</a>的master分支下为Octopress2.0版本，暂不支持Codeblock插件中的start, mark, linenos选项，可以参考这两个临时解决方法：</p>
+
+<ul>
+<li><a href="https://github.com/imathis/octopress/issues/1472">https://github.com/imathis/octopress/issues/1472</a></li>
+<li><a href="https://github.com/imathis/octopress/pull/1485">https://github.com/imathis/octopress/pull/1485</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
