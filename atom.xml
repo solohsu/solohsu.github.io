@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog<sup>&#946;</sup>]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-06T21:07:04+08:00</updated>
+  <updated>2014-04-06T22:08:35+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -54,7 +54,7 @@
 
 <h3>提交时间</h3>
 
-<p>运行<code>rake deploy</code>时，在Rakefile中可以找到默认的提交信息是「Site updated at #{Time.now.utc}」，这里的时间是UTC时间，将<code>Time.now.utc</code>改为<code>Time.now</code>可以改为本地时间。</p>
+<p>运行<code>rake deploy</code>时，在Rakefile中可以找到默认的提交信息是「Site updated at #{Time.now.utc}」，这里的时间是UTC时间，将<code>Time.now.utc</code>改成<code>Time.now</code>就可以使用本地的时间了。</p>
 
 <div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=Rakefile.diff'></script>
 <script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
@@ -73,7 +73,7 @@
 
 <h3>JiaThis插件</h3>
 
-<p>添加JiaThis分享插件后，会发现在分享工具条左下角出现一个小白框，遮挡住了「分」字，影响视觉效果。Google了一下发现了解决方案：</p>
+<p>添加JiaThis分享插件后，会发现在分享工具条左下角出现一个小白框，遮挡住了「分享至」里的「分」字，影响视觉效果。Google了一下发现了解决方案：</p>
 
 <p>修改<code>octopress\source\javascripts\octopress.js</code>：</p>
 
