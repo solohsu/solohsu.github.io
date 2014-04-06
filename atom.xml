@@ -4,7 +4,7 @@
   <title><![CDATA[sOlOHsU's Blog<sup>&#946;</sup>]]></title>
   <link href="http://www.solohsu.com/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-06T20:16:06+08:00</updated>
+  <updated>2014-04-06T20:44:21+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -38,6 +38,7 @@
 <p>修改<code>{ruby_home}\lib\ruby\gems\1.9.1\gems\jekyll-0.12.0\lib\jekyll\convertible.rb</code>，强制使用UTF-8格式：</p>
 
 <div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=convertible.rb.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
 <noscript><pre><code>@@ -25,7 +25,7 @@ def to_s
      #
      # Returns nothing.
@@ -56,6 +57,7 @@
 <p>运行<code>rake deploy</code>时，在Rakefile中可以找到默认的提交信息是「Site updated at #{Time.now.utc}」，这里的时间是UTC时间，将<code>Time.now.utc</code>改为<code>Time.now</code>可以改为本地时间。</p>
 
 <div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=Rakefile.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
 <noscript><pre><code>@@ -261,8 +261,8 @@ multitask :push do
     cp_r &quot;#{public_dir}/.&quot;, deploy_dir
     cd &quot;#{deploy_dir}&quot; do
@@ -76,6 +78,7 @@
 <p>修改<code>octopress\source\javascripts\octopress.js</code>：</p>
 
 <div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=octopress.js.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
 <noscript><pre><code>@@ -94,7 +94,9 @@ function flashVideoFallback(){
   function wrapFlashVideos() {
     $('object').each(function(i, object) {
@@ -96,6 +99,7 @@
 <p>默认的css样式文件中，markdown的列表是没有进行缩进处理的，看着比较别扭。找到<code>octopress\sass\custom\_layout.scss</code>，去掉<code>//$indented-lists: true;</code>这一行的注释符号，重新<code>rake generate</code>就可以了。</p>
 
 <div><script src='https://gist.github.com/e7b7d3cee4bcfe85dcc7.js?file=_layout.scss.diff'></script>
+<script type="text/javascript">$(".gist-file table tr td.line-numbers").remove();</script>
 <noscript><pre><code>@@ -6,7 +6,7 @@
   //$header-padding-bottom: 1.5em;
   
