@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
   <link href="http://www.solohsu.com/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-06T20:44:21+08:00</updated>
+  <updated>2014-04-06T20:49:19+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -110,6 +110,10 @@
   // Padding used for layout margins
   //$pad-min: 18px;</code></pre></noscript></div>
 </p>
+
+<h3>Gist tag</h3>
+
+<p>修复Gist tag的样式。参见：<a href="http://devspade.com/blog/2013/08/06/fixing-gist-embeds-in-octopress/">http://devspade.com/blog/2013/08/06/fixing-gist-embeds-in-octopress/</a></p>
 
 <h3>Codeblock插件</h3>
 
