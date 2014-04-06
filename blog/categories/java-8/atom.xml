@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java-8 | sOlOHsU's Blog]]></title>
+  <title><![CDATA[Category: Java 8 | sOlOHsU's Blog]]></title>
   <link href="http://www.solohsu.com/blog/categories/java-8/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-06T16:41:40+08:00</updated>
+  <updated>2014-04-06T19:51:09+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -21,6 +21,9 @@
     <content type="html"><![CDATA[<h3>Annotations</h3>
 
 <p>Java 8 中 annotations 是可重复的。我们通过下面这里例子来看一下。</p>
+
+<!--more-->
+
 
 <p>首先，我们定义一个包装器annotation，其中存放着真正的annotations的数组：</p>
 
