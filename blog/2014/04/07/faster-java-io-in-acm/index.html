@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="zh"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在ACM中使用Java时如何获得更快的输入处理速度 - sOlOHsU's Blog<sup>&#946;</sup></title>
+  <meta name="author" content="Solo Hsu">
+
+  
+  <meta name="description" content="这里以读取int类型的数据为例。 Scanner 直接使用nextInt() 虽然是最方便的，但是也是最慢的。建议数据量小的时候使用。数据量大的情况下多半会超时。直接使用nextInt()方法的时候一般都会用BufferedInputStream封装一下输入流，速度能稍微快一些。 1
+2
+3
+4 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.solohsu.com/blog/2014/04/07/faster-java-io-in-acm">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="sOlOHsU's Blog<sup>&#946;</sup>" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-49605896-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">sOlOHsU's Blog<sup>&#946;</sup></a></h1>
+  
+    <h2>灯火阑珊处</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.solohsu.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">在ACM中使用Java时如何获得更快的输入处理速度</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-07T14:37:20+08:00" pubdate data-updated="true">Apr 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这里以读取<code>int</code>类型的数据为例。</p>
+
+<h3><code>Scanner</code></h3>
+
+<h4>直接使用<code>nextInt()</code></h4>
+
+<p>虽然是最方便的，但是也是最慢的。建议数据量小的时候使用。数据量大的情况下多半会超时。直接使用<code>nextInt()</code>方法的时候一般都会用<code>BufferedInputStream</code>封装一下输入流，速度能稍微快一些。</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="k">new</span> <span class="n">BufferedInputStream</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">long</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextLong</span><span class="o">();</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">scanner</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>使用<code>next()</code>, 然后手动<code>Integer.parseInt()</code></h4>
+
+<p>这样能比直接使用<code>nextInt()</code>快不少，查看一下<code>nextInt()</code>的源码我们可以发现：<code>nextInt()</code>方法先用正则表达式从流中获取一个表示整型的字符串<code>s</code>，最后再返回<code>Integer.parseInt(s)</code>。多出的时间都消耗在进行模式匹配上了，这其实也就是直接使用<code>nextInt()</code>比较慢的原因之一。而如果我们事先知道输入的数据类型的话，就不用进行匹配，直接解析就可以了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="k">new</span> <span class="n">BufferedInputStream</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">long</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">scanner</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3><code>BufferedReader</code> + <code>StringTokenizer</code></h3>
+
+<p>使用<code>BufferedReader</code>按行读取，然后使用<code>StringTokenizer</code>获取每一行中使用空格符隔开的所有元素。速度甚至比C语言的<code>scanf()</code>还要快。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">StringTokenizer</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringTokenizer</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">tokenizer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringTokenizer</span><span class="o">(</span><span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'>  <span class="kt">long</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">tokenizer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringTokenizer</span><span class="o">(</span><span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">while</span> <span class="o">(!</span><span class="n">tokenizer</span><span class="o">.</span><span class="na">hasMoreTokens</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">tokenizer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringTokenizer</span><span class="o">(</span><span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">reader</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>实际测试结果</h3>
+
+<p>用以上三种方式从文件中读取10,000,000个<code>int</code>型数值所消耗的时间分别为 11.52秒，7.486秒，2.159秒。使用gcc的<code>fscanf()</code>所用时间为 5.303秒。</p>
+
+<p>读取10,000,000个<code>double</code>型数值所消耗的时间分别为 41.125秒，16.082秒，9.271秒。使用gcc的<code>fscanf()</code>所用时间为 11.279秒。</p>
+
+<h3>总结</h3>
+
+<p>虽然使用<code>BufferedReader</code>和<code>StringTokenizer</code>处理输入可以获得让人满意的速度，但是需要写的代码相对来说是比较多的。在ACM比赛时可以准备一个工具类，比赛开始时，让一个人先把这个类写出来备用。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="cm">/** Class for buffered reading int and double values */</span>
+</span><span class='line'>  <span class="kd">class</span> <span class="nc">Reader</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span><span class="o">;</span>
+</span><span class='line'>      <span class="kd">static</span> <span class="n">StringTokenizer</span> <span class="n">tokenizer</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="cm">/** call this method to initialize reader for InputStream */</span>
+</span><span class='line'>      <span class="kd">static</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span>
+</span><span class='line'>                       <span class="k">new</span> <span class="nf">InputStreamReader</span><span class="o">(</span><span class="n">input</span><span class="o">)</span> <span class="o">);</span>
+</span><span class='line'>          <span class="n">tokenizer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringTokenizer</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="cm">/** get next word */</span>
+</span><span class='line'>      <span class="kd">static</span> <span class="n">String</span> <span class="nf">next</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">while</span> <span class="o">(</span> <span class="o">!</span> <span class="n">tokenizer</span><span class="o">.</span><span class="na">hasMoreTokens</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="c1">//TODO add check for eof if necessary</span>
+</span><span class='line'>              <span class="n">tokenizer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringTokenizer</span><span class="o">(</span>
+</span><span class='line'>                     <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">()</span> <span class="o">);</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">tokenizer</span><span class="o">.</span><span class="na">nextToken</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="kd">static</span> <span class="kt">int</span> <span class="nf">nextInt</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span> <span class="n">next</span><span class="o">()</span> <span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      
+</span><span class='line'>      <span class="kd">static</span> <span class="kt">double</span> <span class="nf">nextDouble</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span> <span class="n">next</span><span class="o">()</span> <span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>参考资料</h4>
+
+<ul>
+<li><a href="http://www.cpe.ku.ac.th/~jim/java-io.html">http://www.cpe.ku.ac.th/~jim/java-io.html</a></li>
+<li><a href="http://stackoverflow.com/questions/2446805/is-java-util-scanner-that-slow">http://stackoverflow.com/questions/2446805/is-java-util-scanner-that-slow</a></li>
+<li><a href="http://spc10.contest.scrool.se/doc/javaio">http://spc10.contest.scrool.se/doc/javaio</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Solo Hsu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-07T14:37:20+08:00" pubdate data-updated="true">Apr 7<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/acm/'>ACM</a>, <a class='category' href='/blog/categories/java/'>Java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tools_1"></a>
+		<a class="jiathis_button_tools_2"></a>
+		<a class="jiathis_button_tools_3"></a>
+		<a class="jiathis_button_tools_4"></a>
+		<a href="http://www.jiathis.com/share?uid=1912803" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+		<a class="jiathis_counter_style"></a>
+	</div>
+	<script type="text/javascript">
+	var jiathis_config = {data_track_clickback:'true'};
+	</script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1395495230719339" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/07/faster-java-io-in-acm/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/07/faster-java-io-in-acm/" >Tweet</a>
+  
+  
+  
+    <!-- UY BEGIN -->
+	<div id="uyan_frame"></div>
+	<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1912803"></script>
+	<!-- UY END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/04/06/octopress-custom-modifications/" title="Previous Post: Octopress自定义修改记录">&laquo; Octopress自定义修改记录</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/07/faster-java-io-in-acm/">在ACM中使用Java时如何获得更快的输入处理速度</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/06/octopress-custom-modifications/">Octopress自定义修改记录</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/06/java-8-annotations/">Java 8 简明教程(10): Annotations</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/06/java-8-date-api/">Java 8 简明教程(9): Date API</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+<section>
+  <h1>访客地图</h1>
+  <script type="text/javascript" src="http://ji.revolvermaps.com/2/1.js?i=858ep4o6xm8&amp;s=220&amp;m=0&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Solo Hsu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -9,8 +9,7 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="按照官方教程部署好Octopress后，如果想要支持中文blog的书写，需要修改以下几个地方： 环境变量 如果在Windows操作系统下，需要添加两个环境变量： LANG = zh_CN.UTF-8
-LC_ALL = zh_CN.UTF-8 ">
+  <meta name="description" content="这里以读取int类型的数据为例。 Scanner 直接使用nextInt() 虽然是最方便的，但是也是最慢的。建议数据量小的时候使用。数据量大的情况下多半会超时。直接使用nextInt()方法的时候一般都会用BufferedInputStream封装一下输入流，速度能稍微快一些。 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,53 @@ LC_ALL = zh_CN.UTF-8 ">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/07/faster-java-io-in-acm/">在ACM中使用Java时如何获得更快的输入处理速度</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-07T14:37:20+08:00" pubdate data-updated="true">Apr 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这里以读取<code>int</code>类型的数据为例。</p>
+
+<h3><code>Scanner</code></h3>
+
+<h4>直接使用<code>nextInt()</code></h4>
+
+<p>虽然是最方便的，但是也是最慢的。建议数据量小的时候使用。数据量大的情况下多半会超时。直接使用<code>nextInt()</code>方法的时候一般都会用<code>BufferedInputStream</code>封装一下输入流，速度能稍微快一些。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/07/faster-java-io-in-acm/">继续阅读 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -474,49 +520,6 @@ LC_ALL = zh_CN.UTF-8 ">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/02/java-8-lambda-expression/">Java 8 简明教程(2): Lambda Expression</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-02T15:34:54+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>Lambda 表达式</h3>
-
-<p>先来看一个对字符串数组进行排序的例子，在之前的Java版本中，我们通常这样来实现：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/02/java-8-lambda-expression/">继续阅读 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -532,6 +535,10 @@ LC_ALL = zh_CN.UTF-8 ">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/07/faster-java-io-in-acm/">在ACM中使用Java时如何获得更快的输入处理速度</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/06/octopress-custom-modifications/">Octopress自定义修改记录</a>
       </li>
     
@@ -545,10 +552,6 @@ LC_ALL = zh_CN.UTF-8 ">
     
       <li class="post">
         <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/04/java-8-streams/">Java 8 简明教程(7): Streams</a>
       </li>
     
   </ul>
