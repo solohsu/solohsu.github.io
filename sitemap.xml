@@ -2,59 +2,59 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/01/java-8-default-method/</loc>
-        <lastmod>2014-04-06T16:51:49+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/02/java-8-lambda-expression/</loc>
-        <lastmod>2014-04-06T16:51:58+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/02/java-8-functional-interface/</loc>
-        <lastmod>2014-04-06T16:51:53+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/03/java-8-method-and-constructor-ref/</loc>
-        <lastmod>2014-04-06T16:52:08+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/03/java-8-lambda-scope/</loc>
-        <lastmod>2014-04-06T16:52:13+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/03/java-8-built-in-functional-interface/</loc>
-        <lastmod>2014-04-06T16:52:02+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/04/java-8-streams/</loc>
-        <lastmod>2014-04-06T16:52:29+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/04/java-8-map/</loc>
-        <lastmod>2014-04-06T16:52:20+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/06/java-8-date-api/</loc>
-        <lastmod>2014-04-06T16:52:43+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/06/java-8-annotations/</loc>
-        <lastmod>2014-04-06T16:50:48+08:00</lastmod>
+        <lastmod>2014-04-16T10:20:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/06/octopress-custom-modifications/</loc>
-        <lastmod>2014-04-06T22:08:10+08:00</lastmod>
+        <lastmod>2014-04-16T10:23:50+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/2014/04/07/faster-java-io-in-acm/</loc>
-        <lastmod>2014-04-08T10:58:59+08:00</lastmod>
+        <lastmod>2014-04-16T10:24:00+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/blog/archives/</loc>
-        <lastmod>2014-04-08T10:58:59+08:00</lastmod>
+        <lastmod>2014-04-16T10:24:00+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/</loc>
-        <lastmod>2014-04-08T10:58:59+08:00</lastmod>
+        <lastmod>2014-04-16T10:24:00+08:00</lastmod>
     </url>
     <url>
         <loc>http://www.solohsu.com/robots.txt</loc>

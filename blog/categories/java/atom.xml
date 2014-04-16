@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
   <link href="http://www.solohsu.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-08T10:59:22+08:00</updated>
+  <updated>2014-04-16T10:24:01+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -25,9 +25,6 @@
 <h4>直接使用<code>nextInt()</code></h4>
 
 <p>虽然是最方便的，但是也是最慢的。建议数据量小的时候使用。数据量大的情况下多半会超时。直接使用<code>nextInt()</code>方法的时候一般都会用<code>BufferedInputStream</code>封装一下输入流，速度能稍微快一些。</p>
-
-<!-- more -->
-
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
