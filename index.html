@@ -9,10 +9,13 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="这里以读取int类型的数据为例。 Scanner 直接使用nextInt() 虽然是最方便的，但是也是最慢的。建议数据量小的时候使用。数据量大的情况下多半会超时。直接使用nextInt()方法的时候一般都会用BufferedInputStream封装一下输入流，速度能稍微快一些。 1
+  <meta name="description" content="LOCK TABLES 锁表语法 1
 2
 3
-4 &hellip;">
+4
+5
+6
+7 LOCK TABLES tbl_name [[AS] alias] lock_type [, tbl_name [[AS] alias] lock_type] ... lock_type: READ [LOCAL] | [ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +89,327 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/04/07/faster-java-io-in-acm/">在ACM中使用Java时如何获得更快的输入处理速度</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-20T20:14:04+08:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>LOCK TABLES</h2>
+
+<h3>锁表语法</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'>  <span class="k">LOCK</span> <span class="n">TABLES</span>
+</span><span class='line'>      <span class="n">tbl_name</span> <span class="p">[[</span><span class="k">AS</span><span class="p">]</span> <span class="k">alias</span><span class="p">]</span> <span class="n">lock_type</span>
+</span><span class='line'>      <span class="p">[,</span> <span class="n">tbl_name</span> <span class="p">[[</span><span class="k">AS</span><span class="p">]</span> <span class="k">alias</span><span class="p">]</span> <span class="n">lock_type</span><span class="p">]</span> <span class="p">...</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">lock_type</span><span class="p">:</span>
+</span><span class='line'>      <span class="k">READ</span> <span class="p">[</span><span class="k">LOCAL</span><span class="p">]</span>
+</span><span class='line'>    <span class="o">|</span> <span class="p">[</span><span class="n">LOW_PRIORITY</span><span class="p">]</span> <span class="k">WRITE</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>会话只能为自己获取、释放锁，不能为其他会话获取锁，也不能释放其他会话持有的锁。</p>
+
+<p><code>LOCK TABLES</code>隐式的为当前会话获取表锁。表锁的对象可以是表也可以是视图。</p>
+
+<p>获取视图锁时，<code>LOCK TABLES</code>命令会自动锁定所有与该视图相关的基本表。</p>
+
+<p>使用<code>LOCK TABLES</code>显示的锁定一个表时，这个表的触发器中涉及到的表也会被隐式的锁定，锁的类型取决于触发器中对该表进行了何种操作。</p>
+
+<p>表锁只是用来防止其他会话进行不恰当的操作，持有锁的会话，即使持有的仅仅是读锁，也可以进行诸如<code>DROP TABLE</code>之类的表级操作。而由于<code>TRUNCATE</code>操作不是事务安全的，所以在活动的事务或者持有表锁时尝试执行<code>TRUNCATE</code>操作时会报错。</p>
+
+<p>另外，虽然可以对临时表执行锁表操作，但是实际上会被自动忽略掉，不执行任何操作。因为临时表只对当前会话（也就是创建它的会话）是可见的。</p>
+
+<h3>锁的类型</h3>
+
+<h4>READ [LOCAL]锁</h4>
+
+<ul>
+<li>持有读锁的会话可以读表，但是不能写表。</li>
+<li>多个会话可以同时获得同一个表的读锁。</li>
+<li>其他的会话不用获取该表的读锁也可以读取该表。</li>
+<li><code>LOCAL</code>修饰符允许其他会话执行无冲突的插入语句。但是，如果是在服务器之外的进程上进行操作时，就不能使用<code>READ LOCAL</code>了。另外，对于使用InnoDB引擎的表来说，<code>READ LOCAL</code>与<code>READ</code>没有任何区别。</li>
+</ul>
+
+
+<h4>[LOW_PRIORITY] WRITE锁</h4>
+
+<ul>
+<li>持有写锁的会话可以读表也可以写表。</li>
+<li>只有持有写锁的会话可以访问该表。写锁释放前其他会话都不能对该表进行访问。</li>
+<li>表被写锁锁定时，其他会话对该表的锁定请求将会被阻塞。</li>
+<li><code>LOW_PRIORITY</code>修饰符已被弃用（当前版本为5.7）。直接使用<code>WRITE</code>即可。</li>
+</ul>
+
+
+<p>锁表语句会一直阻塞直到获取到所有需要的锁。
+需要对表进行锁定的会话必须一次性的获取到所有它需要锁，因为一旦锁表语句执行完成，该会话就只能访问被锁的表了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLES t1 READ;
+</span><span class='line'>  mysql&gt; SELECT COUNT<span class="o">(</span>*<span class="o">)</span> FROM t1;
+</span><span class='line'>  +----------+
+</span><span class='line'>  | COUNT<span class="o">(</span>*<span class="o">)</span> |
+</span><span class='line'>  +----------+
+</span><span class='line'>  |        3 |
+</span><span class='line'>  +----------+
+</span><span class='line'>  mysql&gt; SELECT COUNT<span class="o">(</span>*<span class="o">)</span> FROM t2;
+</span><span class='line'>  ERROR 1100 <span class="o">(</span>HY000<span class="o">)</span>: Table <span class="s1">&#39;t2&#39;</span> was not locked with LOCK TABLES
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>INFORMATION_SCHEMA</code>数据库中的表是个例外。即使有会话对这些表进行了锁定，其他会话依然可以继续访问。</p>
+
+<p>在一条查询语句中无法多次对锁定的表使用同一个名字进行引用。这种情况下可以使用表的别名，并且对每一个别也要加一个锁：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLE t WRITE, t AS t1 READ;
+</span><span class='line'>  mysql&gt; INSERT INTO t SELECT * FROM t;
+</span><span class='line'>  ERROR 1100: Table <span class="s1">&#39;t&#39;</span> was not locked with LOCK TABLES
+</span><span class='line'>  mysql&gt; INSERT INTO t SELECT * FROM t AS t1;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不对表的别名进行锁定的话，就无法使用别名对该表进行访问：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLE t READ;
+</span><span class='line'>  mysql&gt; SELECT * FROM t AS myalias;
+</span><span class='line'>  ERROR 1100: Table <span class="s1">&#39;myalias&#39;</span> was not locked with LOCK TABLES
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相反，如果只对别名进行了锁定，则只能使用别名对其进行访问：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLE t AS myalias READ;
+</span><span class='line'>  mysql&gt; SELECT * FROM t;
+</span><span class='line'>  ERROR 1100: Table <span class="s1">&#39;t&#39;</span> was not locked with LOCK TABLES
+</span><span class='line'>  mysql&gt; SELECT * FROM t AS myalias;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>写锁通常相对读锁有更高的优先级，以确保更新操作尽快得到处理。这就意味着如果同时有写锁和读锁两个请求，那么写锁会先得到响应。<code>LOCK TABLES</code>获取锁的过程如下：</p>
+
+<ol>
+<li>使用内部定义的顺序对所有将被加锁的表进行排序，这一步对于用户来说是透明的。</li>
+<li>如果一个表同时有读锁和写锁两个请求，将写锁请求放到读锁请求之前。</li>
+<li>每次锁定一个表直到当前会话获取到所有的需要的锁，并保证不会产生死锁。</li>
+</ol>
+
+
+<p>对分表进行锁定和解锁时，会锁定或者解锁整个表。</p>
+
+<h2>UNLOCK TABLES</h2>
+
+<h3>解锁语法</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'>  <span class="n">UNLOCK</span> <span class="n">TABLES</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用<code>UNLOCK TABLES</code>将显示的释放掉由当前会话持有的所有表锁。</p>
+
+<p><code>LOCK TABLES</code>会在获取新锁之前隐式的释放掉当前会话持有的所有表锁。</p>
+
+<p>会话开始一个事务（例如使用<code>START TRANSACTION</code>）时，会隐式的执行<code>UNLOCK TABLES</code>。</p>
+
+<p>无论会话正常退出或者异常终止，服务器都会隐式的释放掉该会话持有的所有锁。客户端重新连接后，这些锁不会再生效。另外，如果客户端断开时正在执行一个事务，服务器会自动回滚该事务，客户端重连后，新会话将会自动设置为自动提交模式。因此，最好禁用客户端的auto-reconnec。在启用自动重连的情况下，重连后客户端其实已经丢失了所有的锁和事务，但是不会被通知。而当禁用掉自动重连时，一旦连接断开，在一个将被执行的语句处会报错。这样一来客户端就可以检测到这个错误，并采取适当的措施，比如重新获取需要的锁，重新执行之前的事务。</p>
+
+<p>在被锁定的表上执行<code>ALTER TABLE</code>语句后，将使该表变为未锁定状态。如果对该表再执行一条<code>ALTER TABLE</code>语句，就会报错：Table &lsquo;tbl_name&rsquo; was not locked with LOCK TABLES。这种情况下可以在执行完第一条<code>ALTER TABLE</code>后，重新对该表进行锁定。</p>
+
+<p><code>UNLOCK TABLES</code>还可以用来释放之前通过<code>FLUSH TABLES WITH READ LOCK</code>获得的全局读锁。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/18/summer-intern-interview-summary/">2014暑期实习面试</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-18T21:36:39+08:00" pubdate data-updated="true">Apr 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>腾讯移动客户端开发</h3>
+
+<h4>一面</h4>
+
+<ul>
+<li>介绍项目</li>
+<li>两道题目
+
+<ul>
+<li>如何从10亿个QQ号中快速查找给定的QQ号</li>
+<li>RGB2YUV快速算法</li>
+</ul>
+</li>
+<li>详细介绍项目中的移动端</li>
+</ul>
+
+
+<h4>二面</h4>
+
+<ul>
+<li>介绍项目，项目中的APP的亮点和技术难度</li>
+<li>纸上写代码：单链表的反转</li>
+<li>闲扯
+
+<ul>
+<li>用过最出色的APP、最差的APP</li>
+<li>微信和QQ比较</li>
+<li>微信哪些不足</li>
+<li>还用过哪些其他的社交APP</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>HR面</h4>
+
+<p>都是轻松的话题</p>
+
+<ul>
+<li>本科学校</li>
+<li>本科和研究生有没有开设Android的课程</li>
+<li>Android是自学的吗，为什么不做IOS应用开发</li>
+<li>哪里人，山东学生考北京学校的挺多</li>
+<li>前两面的面试官有没有跟你说过你将来到公司做什么</li>
+<li>做过前端，前端和客户端开发你更倾向于哪个</li>
+<li>阿里校招有没有参加，结果如何</li>
+<li>平时的兴趣爱好，水平如何</li>
+<li>到哪看美剧</li>
+<li>实习时间</li>
+</ul>
+
+
+<h3>阿里Java研发</h3>
+
+<h4>一面</h4>
+
+<ul>
+<li>介绍项目
+
+<ul>
+<li>详细介绍项目开发中最有挑战性的部分</li>
+<li>Spring框架的好处</li>
+</ul>
+</li>
+<li>数据库
+
+<ul>
+<li>如何加锁</li>
+<li>锁的级别</li>
+<li>事务控制
+
+<ul>
+<li>给了一道题</li>
+</ul>
+</li>
+<li>乐观锁、悲观锁</li>
+<li>索引
+
+<ul>
+<li>索引的种类</li>
+<li>聚簇索引</li>
+<li>索引的结构
+
+<ul>
+<li>B+树</li>
+</ul>
+</li>
+<li>红黑树</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>复杂的业务逻辑、对象依赖</li>
+<li>面向对象的特征
+
+<ul>
+<li>举例说明</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/07/faster-java-io-in-acm/">使用Java快速处理大数据量的输入</a></h1>
     
     
       <p class="meta">
@@ -1510,186 +1833,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-03T16:46:42+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>方法和构造器的引用</h3>
-
-<p>上个教程中的例子可以通过使用静态方法的引用来进一步简化：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="nl">Integer:</span><span class="o">:</span><span class="n">valueOf</span><span class="o">;</span>
-</span><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>   <span class="c1">// 123</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Java 8 中可以使用<code>::</code>关键字来传递对方法或构造器的引用。上面的例子展示了如何引用一个静态方法。同样我们也可以引用对象中的方法:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">class</span> <span class="nc">Something</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">String</span> <span class="nf">startsWith</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>  <span class="n">Something</span> <span class="n">something</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Something</span><span class="o">();</span>
-</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="nl">something:</span><span class="o">:</span><span class="n">startsWith</span><span class="o">;</span>
-</span><span class='line'>  <span class="n">String</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;Java&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>    <span class="c1">// &quot;J&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>下面来看如何使用<code>::</code>关键字来引用构造器。首先我们定义了一个拥有多个不同构造器的bean。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
-</span><span class='line'>      <span class="n">String</span> <span class="n">lastName</span><span class="o">;</span>
-</span><span class='line'>  
-</span><span class='line'>      <span class="n">Person</span><span class="o">()</span> <span class="o">{}</span>
-</span><span class='line'>  
-</span><span class='line'>      <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">lastName</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="k">this</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">firstName</span><span class="o">;</span>
-</span><span class='line'>          <span class="k">this</span><span class="o">.</span><span class="na">lastName</span> <span class="o">=</span> <span class="n">lastName</span><span class="o">;</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>接下来定义一个person类的工厂接口来创建person实例。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">interface</span> <span class="nc">PersonFactory</span><span class="o">&lt;</span><span class="n">P</span> <span class="kd">extends</span> <span class="n">Person</span><span class="o">&gt;</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">P</span> <span class="nf">create</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">lastName</span><span class="o">);</span>
-</span><span class='line'>  <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>通过使用构造器的引用我们就可以避免手动去实现上面的工厂接口，代码简洁了很多。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">PersonFactory</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">personFactory</span> <span class="o">=</span> <span class="nl">Person:</span><span class="o">:</span><span class="k">new</span><span class="o">;</span>
-</span><span class='line'>  <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="n">personFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;Peter&quot;</span><span class="o">,</span> <span class="s">&quot;Parker&quot;</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们使用<code>Person::new</code>创建了一个对<code>Person</code>类的构造器的引用。Java编译器会通过匹配<code>PersonFactory.create</code>方法的签名自动选用合适的构造器。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/02/java-8-functional-interface/">Java 8 简明教程(3): Functional Interface</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-02T16:33:19+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>函数式接口</h3>
-
-<p>lambda表达式是如何符合Java的类型系统的呢？每个lambda表达式对应一个指定的函数式接口。所谓的<strong>函数式接口</strong>(functional interface)必须包含且仅包含一个抽象方法。每个lambada表达式都会与对应的函数式接口中的这个抽象方法进行匹配。而由于default方法不是抽象的，所以我们可以向函数式接口中随意添加default方法。</p>
-
-<p>只要一个接口只含有一个抽象方法，我们就可以将它用作lambda表达式。我们可以使用<code>@FunctionalInterface</code>注解来确保我们的接口能够满足这一需求。当我们尝试向添加了此注解的接口中添加第二个抽象方法时，编译器会提示存在编译错误。</p>
-
-<p>例子：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@FunctionalInterface</span>
-</span><span class='line'>  <span class="kd">interface</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">T</span> <span class="nf">convert</span><span class="o">(</span><span class="n">F</span> <span class="n">from</span><span class="o">);</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
-</span><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>    <span class="c1">// 123</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>需要注意的是去掉<code>@FucntionalInterface</code>注解后代码依然是正确有效的。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1705,7 +1848,15 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/04/07/faster-java-io-in-acm/">在ACM中使用Java时如何获得更快的输入处理速度</a>
+        <a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/18/summer-intern-interview-summary/">2014暑期实习面试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/07/faster-java-io-in-acm/">使用Java快速处理大数据量的输入</a>
       </li>
     
       <li class="post">
@@ -1714,14 +1865,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/06/java-8-annotations/">Java 8 简明教程(10): Annotations</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/06/java-8-date-api/">Java 8 简明教程(9): Date API</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
       </li>
     
   </ul>

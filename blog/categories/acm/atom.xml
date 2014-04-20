@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ACM | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
   <link href="http://www.solohsu.com/blog/categories/acm/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-16T10:24:01+08:00</updated>
+  <updated>2014-04-20T22:46:16+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[在ACM中使用Java时如何获得更快的输入处理速度]]></title>
+    <title type="html"><![CDATA[使用Java快速处理大数据量的输入]]></title>
     <link href="http://www.solohsu.com/blog/2014/04/07/faster-java-io-in-acm/"/>
     <updated>2014-04-07T14:37:20+08:00</updated>
     <id>http://www.solohsu.com/blog/2014/04/07/faster-java-io-in-acm</id>

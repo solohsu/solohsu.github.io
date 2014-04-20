@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="zh"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>MySQL锁表与解锁 - sOlOHsU's Blog<sup>&#946;</sup></title>
+  <meta name="author" content="Solo Hsu">
+
+  
+  <meta name="description" content="LOCK TABLES 锁表语法 1
+2
+3
+4
+5
+6
+7 LOCK TABLES tbl_name [[AS] alias] lock_type [, tbl_name [[AS] alias] lock_type] ... lock_type: READ [LOCAL] | [ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.solohsu.com/blog/2014/04/20/mysql-lock-and-unlock-tables">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="sOlOHsU's Blog<sup>&#946;</sup>" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-49605896-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">sOlOHsU's Blog<sup>&#946;</sup></a></h1>
+  
+    <h2>灯火阑珊处</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.solohsu.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">MySQL锁表与解锁</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-20T20:14:04+08:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>LOCK TABLES</h2>
+
+<h3>锁表语法</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'>  <span class="k">LOCK</span> <span class="n">TABLES</span>
+</span><span class='line'>      <span class="n">tbl_name</span> <span class="p">[[</span><span class="k">AS</span><span class="p">]</span> <span class="k">alias</span><span class="p">]</span> <span class="n">lock_type</span>
+</span><span class='line'>      <span class="p">[,</span> <span class="n">tbl_name</span> <span class="p">[[</span><span class="k">AS</span><span class="p">]</span> <span class="k">alias</span><span class="p">]</span> <span class="n">lock_type</span><span class="p">]</span> <span class="p">...</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">lock_type</span><span class="p">:</span>
+</span><span class='line'>      <span class="k">READ</span> <span class="p">[</span><span class="k">LOCAL</span><span class="p">]</span>
+</span><span class='line'>    <span class="o">|</span> <span class="p">[</span><span class="n">LOW_PRIORITY</span><span class="p">]</span> <span class="k">WRITE</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>会话只能为自己获取、释放锁，不能为其他会话获取锁，也不能释放其他会话持有的锁。</p>
+
+<p><code>LOCK TABLES</code>隐式的为当前会话获取表锁。表锁的对象可以是表也可以是视图。</p>
+
+<p>获取视图锁时，<code>LOCK TABLES</code>命令会自动锁定所有与该视图相关的基本表。</p>
+
+<p>使用<code>LOCK TABLES</code>显示的锁定一个表时，这个表的触发器中涉及到的表也会被隐式的锁定，锁的类型取决于触发器中对该表进行了何种操作。</p>
+
+<p>表锁只是用来防止其他会话进行不恰当的操作，持有锁的会话，即使持有的仅仅是读锁，也可以进行诸如<code>DROP TABLE</code>之类的表级操作。而由于<code>TRUNCATE</code>操作不是事务安全的，所以在活动的事务或者持有表锁时尝试执行<code>TRUNCATE</code>操作时会报错。</p>
+
+<p>另外，虽然可以对临时表执行锁表操作，但是实际上会被自动忽略掉，不执行任何操作。因为临时表只对当前会话（也就是创建它的会话）是可见的。</p>
+
+<h3>锁的类型</h3>
+
+<h4>READ [LOCAL]锁</h4>
+
+<ul>
+<li>持有读锁的会话可以读表，但是不能写表。</li>
+<li>多个会话可以同时获得同一个表的读锁。</li>
+<li>其他的会话不用获取该表的读锁也可以读取该表。</li>
+<li><code>LOCAL</code>修饰符允许其他会话执行无冲突的插入语句。但是，如果是在服务器之外的进程上进行操作时，就不能使用<code>READ LOCAL</code>了。另外，对于使用InnoDB引擎的表来说，<code>READ LOCAL</code>与<code>READ</code>没有任何区别。</li>
+</ul>
+
+
+<h4>[LOW_PRIORITY] WRITE锁</h4>
+
+<ul>
+<li>持有写锁的会话可以读表也可以写表。</li>
+<li>只有持有写锁的会话可以访问该表。写锁释放前其他会话都不能对该表进行访问。</li>
+<li>表被写锁锁定时，其他会话对该表的锁定请求将会被阻塞。</li>
+<li><code>LOW_PRIORITY</code>修饰符已被弃用（当前版本为5.7）。直接使用<code>WRITE</code>即可。</li>
+</ul>
+
+
+<p>锁表语句会一直阻塞直到获取到所有需要的锁。
+需要对表进行锁定的会话必须一次性的获取到所有它需要锁，因为一旦锁表语句执行完成，该会话就只能访问被锁的表了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLES t1 READ;
+</span><span class='line'>  mysql&gt; SELECT COUNT<span class="o">(</span>*<span class="o">)</span> FROM t1;
+</span><span class='line'>  +----------+
+</span><span class='line'>  | COUNT<span class="o">(</span>*<span class="o">)</span> |
+</span><span class='line'>  +----------+
+</span><span class='line'>  |        3 |
+</span><span class='line'>  +----------+
+</span><span class='line'>  mysql&gt; SELECT COUNT<span class="o">(</span>*<span class="o">)</span> FROM t2;
+</span><span class='line'>  ERROR 1100 <span class="o">(</span>HY000<span class="o">)</span>: Table <span class="s1">&#39;t2&#39;</span> was not locked with LOCK TABLES
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>INFORMATION_SCHEMA</code>数据库中的表是个例外。即使有会话对这些表进行了锁定，其他会话依然可以继续访问。</p>
+
+<p>在一条查询语句中无法多次对锁定的表使用同一个名字进行引用。这种情况下可以使用表的别名，并且对每一个别也要加一个锁：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLE t WRITE, t AS t1 READ;
+</span><span class='line'>  mysql&gt; INSERT INTO t SELECT * FROM t;
+</span><span class='line'>  ERROR 1100: Table <span class="s1">&#39;t&#39;</span> was not locked with LOCK TABLES
+</span><span class='line'>  mysql&gt; INSERT INTO t SELECT * FROM t AS t1;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不对表的别名进行锁定的话，就无法使用别名对该表进行访问：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLE t READ;
+</span><span class='line'>  mysql&gt; SELECT * FROM t AS myalias;
+</span><span class='line'>  ERROR 1100: Table <span class="s1">&#39;myalias&#39;</span> was not locked with LOCK TABLES
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相反，如果只对别名进行了锁定，则只能使用别名对其进行访问：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>   mysql&gt; LOCK TABLE t AS myalias READ;
+</span><span class='line'>  mysql&gt; SELECT * FROM t;
+</span><span class='line'>  ERROR 1100: Table <span class="s1">&#39;t&#39;</span> was not locked with LOCK TABLES
+</span><span class='line'>  mysql&gt; SELECT * FROM t AS myalias;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>写锁通常相对读锁有更高的优先级，以确保更新操作尽快得到处理。这就意味着如果同时有写锁和读锁两个请求，那么写锁会先得到响应。<code>LOCK TABLES</code>获取锁的过程如下：</p>
+
+<ol>
+<li>使用内部定义的顺序对所有将被加锁的表进行排序，这一步对于用户来说是透明的。</li>
+<li>如果一个表同时有读锁和写锁两个请求，将写锁请求放到读锁请求之前。</li>
+<li>每次锁定一个表直到当前会话获取到所有的需要的锁，并保证不会产生死锁。</li>
+</ol>
+
+
+<p>对分表进行锁定和解锁时，会锁定或者解锁整个表。</p>
+
+<h2>UNLOCK TABLES</h2>
+
+<h3>解锁语法</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'>  <span class="n">UNLOCK</span> <span class="n">TABLES</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用<code>UNLOCK TABLES</code>将显示的释放掉由当前会话持有的所有表锁。</p>
+
+<p><code>LOCK TABLES</code>会在获取新锁之前隐式的释放掉当前会话持有的所有表锁。</p>
+
+<p>会话开始一个事务（例如使用<code>START TRANSACTION</code>）时，会隐式的执行<code>UNLOCK TABLES</code>。</p>
+
+<p>无论会话正常退出或者异常终止，服务器都会隐式的释放掉该会话持有的所有锁。客户端重新连接后，这些锁不会再生效。另外，如果客户端断开时正在执行一个事务，服务器会自动回滚该事务，客户端重连后，新会话将会自动设置为自动提交模式。因此，最好禁用客户端的auto-reconnec。在启用自动重连的情况下，重连后客户端其实已经丢失了所有的锁和事务，但是不会被通知。而当禁用掉自动重连时，一旦连接断开，在一个将被执行的语句处会报错。这样一来客户端就可以检测到这个错误，并采取适当的措施，比如重新获取需要的锁，重新执行之前的事务。</p>
+
+<p>在被锁定的表上执行<code>ALTER TABLE</code>语句后，将使该表变为未锁定状态。如果对该表再执行一条<code>ALTER TABLE</code>语句，就会报错：Table &lsquo;tbl_name&rsquo; was not locked with LOCK TABLES。这种情况下可以在执行完第一条<code>ALTER TABLE</code>后，重新对该表进行锁定。</p>
+
+<p><code>UNLOCK TABLES</code>还可以用来释放之前通过<code>FLUSH TABLES WITH READ LOCK</code>获得的全局读锁。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Solo Hsu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-20T20:14:04+08:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/mysql/'>mysql</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tools_1"></a>
+		<a class="jiathis_button_tools_2"></a>
+		<a class="jiathis_button_tools_3"></a>
+		<a class="jiathis_button_tools_4"></a>
+		<a href="http://www.jiathis.com/share?uid=1912803" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+		<a class="jiathis_counter_style"></a>
+	</div>
+	<script type="text/javascript">
+	var jiathis_config = {data_track_clickback:'true'};
+	</script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1395495230719339" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/20/mysql-lock-and-unlock-tables/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/20/mysql-lock-and-unlock-tables/" >Tweet</a>
+  
+  
+  
+    <!-- UY BEGIN -->
+	<div id="uyan_frame"></div>
+	<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1912803"></script>
+	<!-- UY END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/04/18/summer-intern-interview-summary/" title="Previous Post: 2014暑期实习面试">&laquo; 2014暑期实习面试</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/18/summer-intern-interview-summary/">2014暑期实习面试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/07/faster-java-io-in-acm/">使用Java快速处理大数据量的输入</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/06/octopress-custom-modifications/">Octopress自定义修改记录</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/06/java-8-annotations/">Java 8 简明教程(10): Annotations</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+<section>
+  <h1>访客地图</h1>
+  <script type="text/javascript" src="http://ji.revolvermaps.com/2/1.js?i=858ep4o6xm8&amp;s=220&amp;m=0&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Solo Hsu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

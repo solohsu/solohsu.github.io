@@ -9,14 +9,9 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="Lambda 表达式 先来看一个对字符串数组进行排序的例子，在之前的Java版本中，我们通常这样来实现： 1
+  <meta name="description" content="方法和构造器的引用 上个教程中的例子可以通过使用静态方法的引用来进一步简化： 1
 2
-3
-4
-5
-6
-7
-8 List&lt;String&gt; names = Arrays.asList(&quot;peter&quot;, &quot;anna&quot;, & &hellip;">
+3 Converter&lt;String, Integer&gt; converter = Integer::valueOf; Integer converted = converter.convert(& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,186 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/03/java-8-method-and-constructor-ref/">Java 8 简明教程(4): Method and Constructor References</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-03T16:46:42+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>方法和构造器的引用</h3>
+
+<p>上个教程中的例子可以通过使用静态方法的引用来进一步简化：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="nl">Integer:</span><span class="o">:</span><span class="n">valueOf</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>   <span class="c1">// 123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Java 8 中可以使用<code>::</code>关键字来传递对方法或构造器的引用。上面的例子展示了如何引用一个静态方法。同样我们也可以引用对象中的方法:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">class</span> <span class="nc">Something</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">String</span> <span class="nf">startsWith</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  <span class="n">Something</span> <span class="n">something</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Something</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="nl">something:</span><span class="o">:</span><span class="n">startsWith</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">String</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;Java&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>    <span class="c1">// &quot;J&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面来看如何使用<code>::</code>关键字来引用构造器。首先我们定义了一个拥有多个不同构造器的bean。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+</span><span class='line'>      <span class="n">String</span> <span class="n">lastName</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="n">Person</span><span class="o">()</span> <span class="o">{}</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">lastName</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">this</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">firstName</span><span class="o">;</span>
+</span><span class='line'>          <span class="k">this</span><span class="o">.</span><span class="na">lastName</span> <span class="o">=</span> <span class="n">lastName</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接下来定义一个person类的工厂接口来创建person实例。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">interface</span> <span class="nc">PersonFactory</span><span class="o">&lt;</span><span class="n">P</span> <span class="kd">extends</span> <span class="n">Person</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">P</span> <span class="nf">create</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">lastName</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通过使用构造器的引用我们就可以避免手动去实现上面的工厂接口，代码简洁了很多。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">PersonFactory</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">personFactory</span> <span class="o">=</span> <span class="nl">Person:</span><span class="o">:</span><span class="k">new</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="n">personFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;Peter&quot;</span><span class="o">,</span> <span class="s">&quot;Parker&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们使用<code>Person::new</code>创建了一个对<code>Person</code>类的构造器的引用。Java编译器会通过匹配<code>PersonFactory.create</code>方法的签名自动选用合适的构造器。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/02/java-8-functional-interface/">Java 8 简明教程(3): Functional Interface</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-02T16:33:19+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>函数式接口</h3>
+
+<p>lambda表达式是如何符合Java的类型系统的呢？每个lambda表达式对应一个指定的函数式接口。所谓的<strong>函数式接口</strong>(functional interface)必须包含且仅包含一个抽象方法。每个lambada表达式都会与对应的函数式接口中的这个抽象方法进行匹配。而由于default方法不是抽象的，所以我们可以向函数式接口中随意添加default方法。</p>
+
+<p>只要一个接口只含有一个抽象方法，我们就可以将它用作lambda表达式。我们可以使用<code>@FunctionalInterface</code>注解来确保我们的接口能够满足这一需求。当我们尝试向添加了此注解的接口中添加第二个抽象方法时，编译器会提示存在编译错误。</p>
+
+<p>例子：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="nd">@FunctionalInterface</span>
+</span><span class='line'>  <span class="kd">interface</span> <span class="nc">Converter</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">T</span> <span class="nf">convert</span><span class="o">(</span><span class="n">F</span> <span class="n">from</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">converter</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">Integer</span> <span class="n">converted</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="s">&quot;123&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">converted</span><span class="o">);</span>    <span class="c1">// 123</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>需要注意的是去掉<code>@FucntionalInterface</code>注解后代码依然是正确有效的。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -268,7 +443,15 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/04/07/faster-java-io-in-acm/">在ACM中使用Java时如何获得更快的输入处理速度</a>
+        <a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/18/summer-intern-interview-summary/">2014暑期实习面试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/07/faster-java-io-in-acm/">使用Java快速处理大数据量的输入</a>
       </li>
     
       <li class="post">
@@ -277,14 +460,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/06/java-8-annotations/">Java 8 简明教程(10): Annotations</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/06/java-8-date-api/">Java 8 简明教程(9): Date API</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a>
       </li>
     
   </ul>
