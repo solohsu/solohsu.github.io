@@ -9,13 +9,23 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="LOCK TABLES 锁表语法 1
+  <meta name="description" content="增加category_list插件 保存到 plugins/category_list_tag.rb： 1
 2
 3
 4
 5
 6
-7 LOCK TABLES tbl_name [[AS] alias] lock_type [, tbl_name [[AS] alias] lock_type] ... lock_type: READ [LOCAL] | [ &hellip;">
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17 module Jekyll class CategoryListTag &lt; Liquid::Tag &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +93,117 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/21/add-category-list-to-octopress/">为Octopress添加Categories侧边栏</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-21T01:23:05+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>增加category_list插件</h4>
+
+<p>保存到 plugins/category_list_tag.rb：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'> <span class="k">module</span> <span class="nn">Jekyll</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">CategoryListTag</span> <span class="o">&lt;</span> <span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Tag</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>        <span class="n">categories</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">registers</span><span class="o">[</span><span class="ss">:site</span><span class="o">].</span><span class="n">categories</span><span class="o">.</span><span class="n">keys</span>
+</span><span class='line'>        <span class="n">categories</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">category</span><span class="o">|</span>
+</span><span class='line'>          <span class="n">posts_in_category</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">registers</span><span class="o">[</span><span class="ss">:site</span><span class="o">].</span><span class="n">categories</span><span class="o">[</span><span class="n">category</span><span class="o">].</span><span class="n">size</span>
+</span><span class='line'>          <span class="n">category_dir</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">registers</span><span class="o">[</span><span class="ss">:site</span><span class="o">].</span><span class="n">config</span><span class="o">[</span><span class="s1">&#39;category_dir&#39;</span><span class="o">]</span>
+</span><span class='line'>          <span class="n">category_url</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">category_dir</span><span class="p">,</span> <span class="n">category</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/_|\P{Word}/</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/-{2,}/</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">downcase</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">html</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;&lt;li class=&#39;category&#39;&gt;&lt;a href=&#39;/</span><span class="si">#{</span><span class="n">category_url</span><span class="si">}</span><span class="s2">/&#39;&gt;</span><span class="si">#{</span><span class="n">category</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">posts_in_category</span><span class="si">}</span><span class="s2">)&lt;/a&gt;&lt;/li&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>        <span class="n">html</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Template</span><span class="o">.</span><span class="n">register_tag</span><span class="p">(</span><span class="s1">&#39;category_list&#39;</span><span class="p">,</span> <span class="ss">Jekyll</span><span class="p">:</span><span class="ss">:CategoryListTag</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>增加aside</h4>
+
+<p>保存到 source/_includes/asides/category_list.html：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;section&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;h1&gt;</span>Categories<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;categories&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>      \{\% category_list %\}\   //添加时去掉4个\
+</span><span class='line'>    <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/section&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>修改_config.yml文件</h4>
+
+<p>将category_list添加到default_asides：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="err">   </span><span class="l-Scalar-Plain">default_asides</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="nv">asides/category_list.html</span><span class="p-Indicator">,</span> <span class="nv">asides/recent_posts.html</span><span class="p-Indicator">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个插件不支持中文分类，若要支持中文分类，请参考下面这两篇文章：</p>
+
+<ul>
+<li><a href="http://aiku.me/bar/10393365" title="Octopress博客分类添加中文支持">http://aiku.me/bar/10393365</a></li>
+<li><a href="http://blog.sprabbit.com/blog/2012/03/23/octopress/" title="关于在64位 Windows 7 中部署中文化的Octopress">http://blog.sprabbit.com/blog/2012/03/23/octopress/</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1696,143 +1817,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/03/java-8-lambda-scope/">Java 8 简明教程(5): Lambda Scope</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-03T17:21:13+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>Lambda的作用域</h3>
-
-<p>在lambda表达式中访问外部变量的方式与匿名对象相似。从lambda表达式中可以访问外部作用域中的final局部变量，外部对象的成员字段和静态变量。</p>
-
-<h4>访问局部变量</h4>
-
-<p>从lambda表达式中访问外部的final局部变量：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">final</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter</span> <span class="o">=</span>
-</span><span class='line'>          <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
-</span><span class='line'>  
-</span><span class='line'>  <span class="n">stringConverter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>     <span class="c1">// 3</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是与匿名对象不同的是，<code>num</code>不必显式的声明为final变量。所以下面的代码也是正确的：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter</span> <span class="o">=</span>
-</span><span class='line'>          <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
-</span><span class='line'>  
-</span><span class='line'>  <span class="n">stringConverter</span><span class="o">.</span><span class="na">convert</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>     <span class="c1">// 3</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是为了代码能成功编译，<code>num</code>必须隐含为final变量。像下面的代码就无法编译通过：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>  <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter</span> <span class="o">=</span>
-</span><span class='line'>          <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
-</span><span class='line'>  <span class="n">num</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在lambda表达式里对<code>num</code>进行写操作也是被禁止的。</p>
-
-<h4>访问字段和静态变量</h4>
-
-<p>与访问局部变量时相反，在lambda表达式内我们可以对外部对象的成员字段和静态变量进行读写操作。这个特性在匿名对象中已经广为人知了。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">class</span> <span class="nc">Lambda4</span> <span class="o">{</span>
-</span><span class='line'>      <span class="kd">static</span> <span class="kt">int</span> <span class="n">outerStaticNum</span><span class="o">;</span>
-</span><span class='line'>      <span class="kt">int</span> <span class="n">outerNum</span><span class="o">;</span>
-</span><span class='line'>  
-</span><span class='line'>      <span class="kt">void</span> <span class="nf">testScopes</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter1</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-</span><span class='line'>              <span class="n">outerNum</span> <span class="o">=</span> <span class="mi">23</span><span class="o">;</span>
-</span><span class='line'>              <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
-</span><span class='line'>          <span class="o">};</span>
-</span><span class='line'>  
-</span><span class='line'>          <span class="n">Converter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">stringConverter2</span> <span class="o">=</span> <span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-</span><span class='line'>              <span class="n">outerStaticNum</span> <span class="o">=</span> <span class="mi">72</span><span class="o">;</span>
-</span><span class='line'>              <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
-</span><span class='line'>          <span class="o">};</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>访问默认接口方法</h4>
-
-<p>还记得教程(1)中的formula的例子吗？<code>Formula</code>接口定义了一个默认的方法<code>sqrt</code>，任何一个formula的实例都可以访问这个方法，包括匿名对象在内。但在lambda表达式中这个就不适用了。</p>
-
-<p>在lambda表达式内是无法访问默认方法的。下面的代码无法通过编译：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Formula</span> <span class="n">formula</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">sqrt</span><span class="o">(</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">100</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1846,6 +1830,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/21/add-category-list-to-octopress/">为Octopress添加Categories侧边栏</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a>
@@ -1863,10 +1851,6 @@
         <a href="/blog/2014/04/06/octopress-custom-modifications/">Octopress自定义修改记录</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/06/java-8-annotations/">Java 8 简明教程(10): Annotations</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1878,7 +1862,7 @@
 <li class='category'><a href='/blog/categories/java/'>Java (11)</a></li>
 <li class='category'><a href='/blog/categories/java-8/'>Java 8 (10)</a></li>
 <li class='category'><a href='/blog/categories/mysql/'>MySQL (1)</a></li>
-<li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>Octopress (2)</a></li>
 
   </ul>
 </section>
