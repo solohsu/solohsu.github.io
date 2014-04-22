@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Windows Mobile | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/categories/windows-mobile/atom.xml" rel="self"/>
+  <link href="http://www.solohsu.com/"/>
+  <updated>2014-04-22T13:37:31+08:00</updated>
+  <id>http://www.solohsu.com/</id>
+  <author>
+    <name><![CDATA[Solo Hsu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在.NET Compact Framework中使用后台任务]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/21/dot-net-compact-framework-background-task/"/>
+    <updated>2014-04-21T11:12:43+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/21/dot-net-compact-framework-background-task</id>
+    <content type="html"><![CDATA[<p>最近在做一个Windows Mobile平台客户端的项目，需要在后台线程中连接服务器并进行消息的发送和接收。</p>
+
+<h3>后台任务</h3>
+
+<p>由于之前也没接触过C#，所以查找了一下相关资料，发现基本上有使用BackgroundWorker和直接使用Thread两种实现方式。</p>
+
+<p>BackgroundWorker看名字应该类似于Android平台中AsynTask，为了方便编写简单的非UI后台任务而对Thread进行了封装。由于之前的Android客户端中收发消息都是使用的AsynTask，并且后台任务的逻辑也比较简单，BackgroundWorker完全能够满足要求。</p>
+
+<p>写代码时发现没有找到BackgroundWorker这个类，想到Windows Mobile平台使用的是.NET Compact Framework，江湖人称.NET CF,Google了一下，果然CF是不支持BackgroundWorker的，只好另寻他法。</p>
+
+<p>Google之后发现已经有人问过这个问题：</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1323596/net-compact-fw-3-5-background-worker" title=".NET Compact Fw 3.5: Background worker">http://stackoverflow.com/questions/1323596/net-compact-fw-3-5-background-worker</a></li>
+</ul>
+
+
+<p>回答中有人建议自己写一个BackgroundWorker，也有人建议参考微软官方的这篇文章：</p>
+
+<ul>
+<li><a href="http://msdn.microsoft.com/en-us/library/aa446488.aspx" title="Microsoft .NET Compact Framework Background Processing Techniques">http://msdn.microsoft.com/en-us/library/aa446488.aspx</a></li>
+</ul>
+
+
+<p>这篇文章中提到了在.NET CF中创建后台任务的三种方式：</p>
+
+<ol>
+<li>异步访问Web Service</li>
+<li>线程池</li>
+<li>显示的创建线程</li>
+</ol>
+
+
+<p>根据我们的应用场景我最终选择了线程池这种比较简单的方式。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">&lt;/</span><span class="n">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="n">pre</span><span class="p">&gt;&lt;</span><span class="n">code</span><span class="p">&gt;</span>    <span class="k">void</span> <span class="n">ReadBigFile2</span><span class="p">(</span><span class="kt">object</span> <span class="n">val</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>      <span class="kt">string</span> <span class="n">dataFile</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="n">val</span> <span class="p">;</span> <span class="c1">// val is a reference to fName</span>
+</span><span class='line'>      <span class="c1">// Do work to read and process dataFile</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="k">public</span> <span class="k">void</span> <span class="nf">btnStartRead_Click</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>      <span class="kt">string</span> <span class="n">fName</span> <span class="p">=</span> <span class="err">“</span><span class="n">BigDataFile</span><span class="p">.</span><span class="n">xml</span><span class="err">”</span> <span class="p">;</span>
+</span><span class='line'>      <span class="n">WaitCallback</span> <span class="n">w</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WaitCallback</span><span class="p">(</span><span class="n">ReadBigFile2</span><span class="p">)</span> <span class="p">;</span>
+</span><span class='line'>      <span class="c1">// fName will be passed to ReadBigFile</span>
+</span><span class='line'>      <span class="n">ThreadPool</span><span class="p">.</span><span class="n">QueueUserWorkItem</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">fName</span><span class="p">)</span> <span class="p">;</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'><span class="p">&lt;/</span><span class="n">code</span><span class="p">&gt;&lt;/</span><span class="n">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="n">p</span><span class="p">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>查看默认的线程池中辅助线程的最大数目和异步I/O线程的最大数目：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">&lt;/</span><span class="n">p</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="n">pre</span><span class="p">&gt;&lt;</span><span class="n">code</span><span class="p">&gt;</span><span class="kt">int</span> <span class="n">workerThreads</span><span class="p">,</span> <span class="n">completionPortThreads</span><span class="p">;</span>
+</span><span class='line'><span class="n">ThreadPool</span><span class="p">.</span><span class="n">GetMaxThreads</span><span class="p">(</span><span class="k">out</span> <span class="n">workerThreads</span><span class="p">,</span> <span class="k">out</span> <span class="n">completionPortThreads</span><span class="p">);</span>
+</span><span class='line'><span class="n">System</span><span class="p">.</span><span class="n">Diagnostics</span><span class="p">.</span><span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">workerThreads</span><span class="p">);</span>  <span class="c1">// 25</span>
+</span><span class='line'><span class="n">System</span><span class="p">.</span><span class="n">Diagnostics</span><span class="p">.</span><span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">completionPortThreads</span><span class="p">);</span><span class="c1">// 500</span>
+</span><span class='line'><span class="p">&lt;/</span><span class="n">code</span><span class="p">&gt;&lt;/</span><span class="n">pre</span><span class="p">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">&lt;</span><span class="n">p</span><span class="p">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>可以使用<code>ThreadPool.SetMaxThreads</code>方法按需修改。</p>
+
+<h3>在后台任务中操纵UI控件</h3>
+
+<p>将消息收发转到后台线程之后，就不能直接在收发消息时直接操纵UI控件了，需要在UI线程中定义好操纵控件的方法，然后在后台线程中使用<code>Control.Invoke</code>或者<code>Control.BeginInvoke</code>方法通过委托的方式进行调用，<code>Invoke</code>与<code>BeginInvoke</code>的区别是前者在进行委托调用时后台线程会阻塞，而后者使用的是异步委托调用。详细分析可以参考这几篇博文：</p>
+
+<ul>
+<li><a href="http://www.cnblogs.com/mashang/archive/2009/08/01/1536730.html" title="c# Invoke和BeginInvoke 区别">http://www.cnblogs.com/mashang/archive/2009/08/01/1536730.html</a></li>
+<li><a href="http://blog.csdn.net/ansencumt/article/details/6024775" title="在WM下，获得当前路径处理和解决异常“Control.Invoke 必须用于与在独立线程上创建的控件交互。”">http://blog.csdn.net/ansencumt/article/details/6024775</a></li>
+</ul>
+
+
+<h3>关于WaitCursor</h3>
+
+<p>在Android中执行后台任务时，我们通常会在界面上覆盖一个指示后台任务正在运行的ProgressDialog。</p>
+
+<p>C#中可以使用<code>Cursor.Current = Cursors.WaitCursor;</code>来显示一个等待指示器。但是这时我们依然可以对界面中的控件进行操作，简单的解决方法是后台任务开始时使用<code>this.Enabled = false;</code>将当前窗体设为不可用，执行结束后<code>this.Enabled = true;</code>再恢复可用。缺点是整个界面会变成灰色。</p>
+
+<ul>
+<li><a href="http://www.codeproject.com/Questions/245525/wait-cursor-comes-but-still-i-am-able-to-click-the" title="wait cursor comes but still i am able to click the button">http://www.codeproject.com/Questions/245525/wait-cursor-comes-but-still-i-am-able-to-click-the</a></li>
+</ul>
+
+
+<h3>参考资料</h3>
+
+<ul>
+<li><a href="http://www.cnblogs.com/leslies2/archive/2012/02/07/2310495.html" title="C#综合揭秘——细说多线程（上）">http://www.cnblogs.com/leslies2/archive/2012/02/07/2310495.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

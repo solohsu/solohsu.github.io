@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="zh"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在.NET Compact Framework中使用后台任务 - sOlOHsU's Blog<sup>&#946;</sup></title>
+  <meta name="author" content="Solo Hsu">
+
+  
+  <meta name="description" content="最近在做一个Windows Mobile平台客户端的项目，需要在后台线程中连接服务器并进行消息的发送和接收。 后台任务 由于之前也没接触过C#，所以查找了一下相关资料，发现基本上有使用BackgroundWorker和直接使用Thread两种实现方式。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.solohsu.com/blog/2014/04/21/dot-net-compact-framework-background-task">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="sOlOHsU's Blog<sup>&#946;</sup>" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-49605896-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">sOlOHsU's Blog<sup>&#946;</sup></a></h1>
+  
+    <h2>灯火阑珊处</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.solohsu.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">在.NET Compact Framework中使用后台任务</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-21T11:12:43+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近在做一个Windows Mobile平台客户端的项目，需要在后台线程中连接服务器并进行消息的发送和接收。</p>
+
+<h3>后台任务</h3>
+
+<p>由于之前也没接触过C#，所以查找了一下相关资料，发现基本上有使用BackgroundWorker和直接使用Thread两种实现方式。</p>
+
+<p>BackgroundWorker看名字应该类似于Android平台中AsynTask，为了方便编写简单的非UI后台任务而对Thread进行了封装。由于之前的Android客户端中收发消息都是使用的AsynTask，并且后台任务的逻辑也比较简单，BackgroundWorker完全能够满足要求。</p>
+
+<p>写代码时发现没有找到BackgroundWorker这个类，想到Windows Mobile平台使用的是.NET Compact Framework，江湖人称.NET CF,Google了一下，果然CF是不支持BackgroundWorker的，只好另寻他法。</p>
+
+<p>Google之后发现已经有人问过这个问题：</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1323596/net-compact-fw-3-5-background-worker" title=".NET Compact Fw 3.5: Background worker">http://stackoverflow.com/questions/1323596/net-compact-fw-3-5-background-worker</a></li>
+</ul>
+
+
+<p>回答中有人建议自己写一个BackgroundWorker，也有人建议参考微软官方的这篇文章：</p>
+
+<ul>
+<li><a href="http://msdn.microsoft.com/en-us/library/aa446488.aspx" title="Microsoft .NET Compact Framework Background Processing Techniques">http://msdn.microsoft.com/en-us/library/aa446488.aspx</a></li>
+</ul>
+
+
+<p>这篇文章中提到了在.NET CF中创建后台任务的三种方式：</p>
+
+<ol>
+<li>异步访问Web Service</li>
+<li>线程池</li>
+<li>显示的创建线程</li>
+</ol>
+
+
+<p>根据我们的应用场景我最终选择了线程池这种比较简单的方式。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'>       <span class="k">void</span> <span class="nf">ReadBigFile2</span><span class="p">(</span><span class="kt">object</span> <span class="n">val</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">{</span>
+</span><span class='line'>        <span class="kt">string</span> <span class="n">dataFile</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="n">val</span> <span class="p">;</span> <span class="c1">// val is a reference to fName</span>
+</span><span class='line'>        <span class="c1">// Do work to read and process dataFile</span>
+</span><span class='line'>     <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>     <span class="k">public</span> <span class="k">void</span> <span class="nf">btnStartRead_Click</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">{</span>
+</span><span class='line'>        <span class="kt">string</span> <span class="n">fName</span> <span class="p">=</span> <span class="err">“</span><span class="n">BigDataFile</span><span class="p">.</span><span class="n">xml</span><span class="err">”</span> <span class="p">;</span>
+</span><span class='line'>        <span class="n">WaitCallback</span> <span class="n">w</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WaitCallback</span><span class="p">(</span><span class="n">ReadBigFile2</span><span class="p">)</span> <span class="p">;</span>
+</span><span class='line'>        <span class="c1">// fName will be passed to ReadBigFile</span>
+</span><span class='line'>        <span class="n">ThreadPool</span><span class="p">.</span><span class="n">QueueUserWorkItem</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">fName</span><span class="p">)</span> <span class="p">;</span>
+</span><span class='line'>     <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看默认的线程池中辅助线程的最大数目和异步I/O线程的最大数目：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'>   <span class="kt">int</span> <span class="n">workerThreads</span><span class="p">,</span> <span class="n">completionPortThreads</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">ThreadPool</span><span class="p">.</span><span class="n">GetMaxThreads</span><span class="p">(</span><span class="k">out</span> <span class="n">workerThreads</span><span class="p">,</span> <span class="k">out</span> <span class="n">completionPortThreads</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="p">.</span><span class="n">Diagnostics</span><span class="p">.</span><span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">workerThreads</span><span class="p">);</span>  <span class="c1">// 25</span>
+</span><span class='line'>  <span class="n">System</span><span class="p">.</span><span class="n">Diagnostics</span><span class="p">.</span><span class="n">Debug</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">completionPortThreads</span><span class="p">);</span><span class="c1">// 500</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以使用<code>ThreadPool.SetMaxThreads</code>方法按需修改。</p>
+
+<h3>在后台任务中操纵UI控件</h3>
+
+<p>将消息收发转到后台线程之后，就不能直接在收发消息时直接操纵UI控件了，需要在UI线程中定义好操纵控件的方法，然后在后台线程中使用<code>Control.Invoke</code>或者<code>Control.BeginInvoke</code>方法通过委托的方式进行调用，<code>Invoke</code>与<code>BeginInvoke</code>的区别是前者在进行委托调用时后台线程会阻塞，而后者使用的是异步委托调用。详细分析可以参考这几篇博文：</p>
+
+<ul>
+<li><a href="http://www.cnblogs.com/mashang/archive/2009/08/01/1536730.html" title="c# Invoke和BeginInvoke 区别">http://www.cnblogs.com/mashang/archive/2009/08/01/1536730.html</a></li>
+<li><a href="http://blog.csdn.net/ansencumt/article/details/6024775" title="在WM下，获得当前路径处理和解决异常“Control.Invoke 必须用于与在独立线程上创建的控件交互。”">http://blog.csdn.net/ansencumt/article/details/6024775</a></li>
+</ul>
+
+
+<h3>关于WaitCursor</h3>
+
+<p>在Android中执行后台任务时，我们通常会在界面上覆盖一个指示后台任务正在运行的ProgressDialog。</p>
+
+<p>C#中可以使用<code>Cursor.Current = Cursors.WaitCursor;</code>来显示一个等待指示器。但是这时我们依然可以对界面中的控件进行操作，简单的解决方法是后台任务开始时使用<code>this.Enabled = false;</code>将当前窗体设为不可用，执行结束后<code>this.Enabled = true;</code>再恢复可用。缺点是整个界面会变成灰色。</p>
+
+<ul>
+<li><a href="http://www.codeproject.com/Questions/245525/wait-cursor-comes-but-still-i-am-able-to-click-the" title="wait cursor comes but still i am able to click the button">http://www.codeproject.com/Questions/245525/wait-cursor-comes-but-still-i-am-able-to-click-the</a></li>
+</ul>
+
+
+<h3>参考资料</h3>
+
+<ul>
+<li><a href="http://www.cnblogs.com/leslies2/archive/2012/02/07/2310495.html" title="C#综合揭秘——细说多线程（上）">http://www.cnblogs.com/leslies2/archive/2012/02/07/2310495.html</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Solo Hsu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-21T11:12:43+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/windows-mobile/'>Windows Mobile</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tools_1"></a>
+		<a class="jiathis_button_tools_2"></a>
+		<a class="jiathis_button_tools_3"></a>
+		<a class="jiathis_button_tools_4"></a>
+		<a href="http://www.jiathis.com/share?uid=1912803" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+		<a class="jiathis_counter_style"></a>
+	</div>
+	<script type="text/javascript">
+	var jiathis_config = {data_track_clickback:'true'};
+	</script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1395495230719339" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.solohsu.com/blog/2014/04/21/dot-net-compact-framework-background-task/" data-via="" data-counturl="http://www.solohsu.com/blog/2014/04/21/dot-net-compact-framework-background-task/" >Tweet</a>
+  
+  
+  
+    <!-- UY BEGIN -->
+	<div id="uyan_frame"></div>
+	<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1912803"></script>
+	<!-- UY END -->
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/04/21/add-category-list-to-octopress/" title="Previous Post: 为Octopress添加Categories侧边栏">&laquo; 为Octopress添加Categories侧边栏</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/21/dot-net-compact-framework-background-task/">在.NET Compact Framework中使用后台任务</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/21/add-category-list-to-octopress/">为Octopress添加Categories侧边栏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/18/summer-intern-interview-summary/">2014暑期实习面试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/07/faster-java-io-in-acm/">使用Java快速处理大数据量的输入</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/acm/'>ACM (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>C# (1)</a></li>
+<li class='category'><a href='/blog/categories/database/'>Database (1)</a></li>
+<li class='category'><a href='/blog/categories/interview/'>Interview (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>Java (11)</a></li>
+<li class='category'><a href='/blog/categories/java-8/'>Java 8 (10)</a></li>
+<li class='category'><a href='/blog/categories/mysql/'>MySQL (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>Octopress (2)</a></li>
+<li class='category'><a href='/blog/categories/windows-mobile/'>Windows Mobile (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+<section>
+  <h1>访客地图</h1>
+  <script type="text/javascript" src="http://ji.revolvermaps.com/2/1.js?i=858ep4o6xm8&amp;s=220&amp;m=0&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Solo Hsu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
