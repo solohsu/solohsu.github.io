@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Interview | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
   <link href="http://www.solohsu.com/blog/categories/interview/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-22T13:37:31+08:00</updated>
+  <updated>2014-04-22T14:54:07+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[阿里校园招聘暑期实习二面面经]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/22/2014-alibaba-summer-intern-2nd-interview/"/>
+    <updated>2014-04-22T14:42:16+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/22/2014-alibaba-summer-intern-2nd-interview</id>
+    <content type="html"><![CDATA[<p>来自2015届校招群里的波波同学：</p>
+
+<ol>
+<li>自我介绍</li>
+<li>最出彩的项目，聊项目，遇到的难题</li>
+<li>WebService相关相关知识，写wsdl文档的格式、webservice、uddi、wsdl（说明文档）、soap</li>
+<li>spring的理解，spring的Ioc原理、并发性（内存的占用怎么样）</li>
+<li>java的jvm的内存模式（堆。栈、代码区、数据区）、内存回收机制（自己回收）、jvm内存的设置（不知道）</li>
+<li>编程：找出字符串中的url</li>
+<li>HR：你研究生和本科生最大的进步是什么（目标更加明确，对自身更加了解）</li>
+<li>还找了其他的实习吗？进度？你为什么选择阿里？（分布式计算）</li>
+<li>你最近有没有感兴趣的技术，技术进步的主要手段（网络）。</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[2014暑期实习面试]]></title>
