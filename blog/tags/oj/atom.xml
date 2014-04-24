@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: ACM | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
-  <link href="http://www.solohsu.com/blog/categories/acm/atom.xml" rel="self"/>
+  <title><![CDATA[Tag: OJ | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/tags/oj/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-22T14:54:07+08:00</updated>
+  <updated>2014-04-24T19:30:07+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>

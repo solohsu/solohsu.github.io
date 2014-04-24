@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Octopress | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
-  <link href="http://www.solohsu.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <title><![CDATA[Tag: Octopress | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/tags/octopress/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
   <updated>2014-04-24T19:30:07+08:00</updated>
   <id>http://www.solohsu.com/</id>

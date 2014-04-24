@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java 8 | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
-  <link href="http://www.solohsu.com/blog/categories/java-8/atom.xml" rel="self"/>
+  <title><![CDATA[Tag: Java 8 | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/tags/java-8/atom.xml" rel="self"/>
   <link href="http://www.solohsu.com/"/>
-  <updated>2014-04-22T14:54:07+08:00</updated>
+  <updated>2014-04-24T19:30:07+08:00</updated>
   <id>http://www.solohsu.com/</id>
   <author>
     <name><![CDATA[Solo Hsu]]></name>
@@ -440,7 +440,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(8): Map]]></title>
+    <title type="html"><![CDATA[Java 8 简明教程(8): map]]></title>
     <link href="http://www.solohsu.com/blog/2014/04/04/java-8-map/"/>
     <updated>2014-04-04T17:03:54+08:00</updated>
     <id>http://www.solohsu.com/blog/2014/04/04/java-8-map</id>
@@ -581,7 +581,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(7): Streams]]></title>
+    <title type="html"><![CDATA[Java 8 简明教程(7): streams]]></title>
     <link href="http://www.solohsu.com/blog/2014/04/04/java-8-streams/"/>
     <updated>2014-04-04T09:43:47+08:00</updated>
     <id>http://www.solohsu.com/blog/2014/04/04/java-8-streams</id>
@@ -958,7 +958,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Java 8 简明教程(6): Built-in Functional Interfaces]]></title>
+    <title type="html"><![CDATA[Java 8 简明教程(6): built-in functional interfaces]]></title>
     <link href="http://www.solohsu.com/blog/2014/04/03/java-8-built-in-functional-interface/"/>
     <updated>2014-04-03T20:06:22+08:00</updated>
     <id>http://www.solohsu.com/blog/2014/04/03/java-8-built-in-functional-interface</id>
