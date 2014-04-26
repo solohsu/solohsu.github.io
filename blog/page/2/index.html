@@ -9,7 +9,13 @@
   <meta name="author" content="Solo Hsu">
 
   
-  <meta name="description" content="Streams java.util.Stream表示一个多元素的数组，在上面可以进行一项或者多项操作。Stream操作分为两种，一种是intermediate操作，一种是terminal操作。terminal操作返回的是某一特定类型的结果，而intermediate操作返回的stream对象本身， &hellip;">
+  <meta name="description" content="Map 虽然map是不支持stream的。但是Java 8中为map增加了多种很有用的方法，方便我们执行各种针对map的常见任务。 1
+2
+3
+4
+5
+6
+7 Map&lt;Integer, String&gt; map = new HashMap&lt;&gt;(); for (int i = &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +85,135 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/04/java-8-map/">Java 8 简明教程(8): Map</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-04T17:03:54+08:00" pubdate data-updated="true">Apr 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Map</h3>
+
+<p>虽然map是不支持stream的。但是Java 8中为map增加了多种很有用的方法，方便我们执行各种针对map的常见任务。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">map</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="s">&quot;val&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">id</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">val</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码很简明：<code>putIfAbsent</code>方法使我们不用再写额外的if null检查语句了；<code>forEach</code>方法接受一个「消费者」，对map中的每一个值执行相应操作。</p>
+
+<p>下面的例子展示了如何使用函数来对指定的value进行计算：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="n">map</span><span class="o">.</span><span class="na">computeIfPresent</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">val</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// val33</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">computeIfPresent</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span> <span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">val</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>     <span class="c1">// false</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="mi">23</span><span class="o">,</span> <span class="n">num</span> <span class="o">-&gt;</span> <span class="s">&quot;val&quot;</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="mi">23</span><span class="o">);</span>    <span class="c1">// true</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="n">num</span> <span class="o">-&gt;</span> <span class="s">&quot;bam&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// val33</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面来看一下如何移除完全匹配给定的key/value的entries：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> 
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;val3&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// val33</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">&quot;val33&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>             <span class="c1">// null</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外一个很有用的方法：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> 
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="mi">42</span><span class="o">,</span> <span class="s">&quot;not found&quot;</span><span class="o">);</span>  <span class="c1">// not found</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>进行entries的合并也非常简单：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> 
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span> <span class="s">&quot;val9&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">newValue</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">value</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">newValue</span><span class="o">));</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>             <span class="c1">// val9</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span> <span class="s">&quot;concat&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">newValue</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">value</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="n">newValue</span><span class="o">));</span>
+</span><span class='line'>  <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>             <span class="c1">// val9concat</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>merge</code>方法在给定的key不存在时，将key/value添加进map中，否则对现有的value进行修改。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1033,6 +1168,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/26/java-classloader/">Java基础之ClassLoader</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/22/2014-alibaba-summer-intern-2nd-interview/">阿里校园招聘暑期实习二面面经</a>
       </li>
     
@@ -1048,17 +1187,13 @@
         <a href="/blog/2014/04/20/mysql-lock-and-unlock-tables/">MySQL锁表与解锁</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/18/summer-intern-interview-summary/">2014暑期实习面试</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
   <ul id="categories">
     <li class='category'><a href='/blog/categories/csharp/'>CSharp (1)</a></li>
-<li class='category'><a href='/blog/categories/java/'>Java (11)</a></li>
+<li class='category'><a href='/blog/categories/java/'>Java (12)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (2)</a></li>
 <li class='category'><a href='/blog/categories/shu-ju-ku/'>数据库 (1)</a></li>
 <li class='category'><a href='/blog/categories/mian-shi/'>面试 (2)</a></li>

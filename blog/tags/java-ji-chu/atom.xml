@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Java 基础 | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/tags/java-ji-chu/atom.xml" rel="self"/>
+  <link href="http://www.solohsu.com/"/>
+  <updated>2014-04-26T22:14:59+08:00</updated>
+  <id>http://www.solohsu.com/</id>
+  <author>
+    <name><![CDATA[Solo Hsu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Java基础之ClassLoader]]></title>
+    <link href="http://www.solohsu.com/blog/2014/04/26/java-classloader/"/>
+    <updated>2014-04-26T21:47:23+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/04/26/java-classloader</id>
+    <content type="html"><![CDATA[<h3>什么是类加载器</h3>
+
+<p>类加载器是一个用来加载类文件的类。Java源代码通过javac编译器编译成类文件。然后JVM来执行类文件中的字节码来执行程序。类加载器负责加载文件系统、网络或其他来源的类文件。有三种默认使用的类加载器：Bootstrap类加载器、Extension类加载器和System类加载器（在HotSpot中的实现叫作Application类加载器）。每种类加载器都有设定好从哪里加载类。</p>
+
+<ul>
+<li>Bootstrap类加载器负责加载rt.jar中的JDK类文件，它是所有类加载器的父加载器。Bootstrap类加载器没有任何父类加载器，如果你调用<code>String.class.getClassLoader()</code>，会返回<code>null</code>，任何基于此的代码会抛出<code>NUllPointerException</code>异常。Bootstrap加载器被称为初始类加载器。</li>
+<li>而Extension将加载类的请求先委托给它的父加载器，也就是Bootstrap，如果没有成功加载的话，再从jre/lib/ext目录下或者java.ext.dirs系统属性定义的目录下加载类。Extension加载器由<code>sun.misc.Launcher$ExtClassLoader</code>实现。</li>
+<li>第三种默认的加载器就是System类加载器（又叫作Application类加载器）了。它负责从classpath环境变量中加载某些应用相关的类，classpath环境变量通常由-classpath或-cp命令行选项来定义，或者是JAR中的Manifest的classpath属性。Application类加载器是Extension类加载器的子加载器。通过<code>sun.misc.Launcher$AppClassLoader</code>实现。</li>
+</ul>
+
+
+<p>除了Bootstrap类加载器是大部分由C++来写的，其他的类加载器都是通过继承<code>java.lang.ClassLoader</code>来实现的。</p>
+
+<p><img src="/images/java_classloader_hierarchy.png"></p>
+
+<h3>类加载器的工作原理</h3>
+
+<p>类加载器的工作原理基于三个机制：委托、可见性和单一性。这一节，我们来详细看看这些规则，并用一个实例来理解工作原理。下面显示的是类加载器使用委托机制的工作原理。</p>
+
+<h4>委托机制</h4>
+
+<p>当一个类加载和初始化的时候，类仅在有需要加载的时候被加载。假设你有一个应用需要的类叫作<code>Abc.class</code>，首先加载这个类的请求由Application类加载器委托给它的父类加载器Extension类加载器，然后再委托给Bootstrap类加载器。Bootstrap类加载器会先看看rt.jar中有没有这个类，因为并没有这个类，所以这个请求由回到Extension类加载器，它会查看jre/lib/ext目录下有没有这个类，如果这个类被Extension类加载器找到了，那么它将被加载，而Application类加载器不会加载这个类；而如果这个类没有被Extension类加载器找到，那么再由Application类加载器从classpath中寻找。</p>
+
+<h4>可见性机制</h4>
+
+<p>根据可见性机制，子类加载器可以看到父类加载器加载的类，而反之则不行。所以下面的例子中，当Abc.class已经被Application类加载器加载过了，然后如果想要使用Extension类加载器加载这个类，将会抛出<code>java.lang.ClassNotFoundException</code>异常。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kn">package</span> <span class="n">test</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.logging.Level</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.logging.Logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * Java program to demonstrate How ClassLoader works in Java,</span>
+</span><span class='line'><span class="cm"> * in particular about visibility principle of ClassLoader.</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> * @author Javin Paul</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClassLoaderTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">//printing ClassLoader of this class</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;ClassLoaderTest.getClass().getClassLoader() : &quot;</span>
+</span><span class='line'>                                 <span class="o">+</span> <span class="n">ClassLoaderTest</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getClassLoader</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">//trying to explicitly load this class again using Extension class loader</span>
+</span><span class='line'>            <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&quot;test.ClassLoaderTest&quot;</span><span class="o">,</span> <span class="kc">true</span>
+</span><span class='line'>                            <span class="o">,</span>  <span class="n">ClassLoaderTest</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getClassLoader</span><span class="o">().</span><span class="na">getParent</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">Logger</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">ClassLoaderTest</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">()).</span><span class="na">log</span><span class="o">(</span><span class="n">Level</span><span class="o">.</span><span class="na">SEVERE</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>输出：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>ClassLoaderTest.getClass().getClassLoader() : sun.misc.Launcher$AppClassLoader@601bb1
+</span><span class='line'>16/08/2012 2:43:48 AM test.ClassLoaderTest main
+</span><span class='line'>SEVERE: null
+</span><span class='line'>java.lang.ClassNotFoundException: test.ClassLoaderTest
+</span><span class='line'>        at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+</span><span class='line'>        at java.security.AccessController.doPrivileged(Native Method)
+</span><span class='line'>        at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+</span><span class='line'>        at sun.misc.Launcher$ExtClassLoader.findClass(Launcher.java:229)
+</span><span class='line'>        at java.lang.ClassLoader.loadClass(ClassLoader.java:306)
+</span><span class='line'>        at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+</span><span class='line'>        at java.lang.Class.forName0(Native Method)
+</span><span class='line'>        at java.lang.Class.forName(Class.java:247)
+</span><span class='line'>        at test.ClassLoaderTest.main(ClassLoaderTest.java:29)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>单一性机制</h4>
+
+<p>根据这个机制，父加载器加载过的类不能被子加载器加载第二次。虽然重写违反委托和单一性机制的类加载器是可能的，但这样做并不可取。你写自己的类加载器的时候应该严格遵守这三条机制。</p>
+
+<h3>如何显式的加载类</h3>
+
+<p>Java提供了显式加载类的API：<code>Class.forName(classname)</code>和<code>Class.forName(classname, initialized, classloader)</code>。就像上面的例子中，你可以指定类加载器的名称以及要加载的类的名称。类的加载是通过调用<code>java.lang.ClassLoader的loadClass()</code>方法，而<code>loadClass()</code>方法则调用了<code>findClass()</code>方法来定位相应类的字节码。在这个例子中Extension类加载器使用了<code>java.net.URLClassLoader</code>，它从JAR和目录中进行查找类文件，所有以”/”结尾的查找路径被认为是目录。如果<code>findClass()</code>没有找到那么它会抛出<code>java.lang.ClassNotFoundException</code>异常，而如果找到的话则会调用<code>defineClass()</code>将字节码转化成类实例，然后返回。</p>
+
+<h3>什么地方使用类加载器</h3>
+
+<p>类加载器是个很强大的概念，很多地方被运用。最经典的例子就是AppletClassLoader，它被用来加载Applet使用的类，而Applets大部分是在网上使用，而非本地的操作系统使用。使用不同的类加载器，你可以从不同的源地址加载同一个类，它们被视为不同的类。J2EE使用多个类加载器加载不同地方的类，例如WAR文件由Web-app类加载器加载，而EJB-JAR中的类由另外的类加载器加载。有些服务器也支持热部署，这也由类加载器实现。你也可以使用类加载器来加载数据库或者其他持久层的数据。</p>
+
+<p>参考资料：</p>
+
+<ul>
+<li><a href="http://www.importnew.com/6581.html">http://www.importnew.com/6581.html</a></li>
+<li><a href="http://www.blogjava.net/mstar/archive/2006/08/24/65505.html">http://www.blogjava.net/mstar/archive/2006/08/24/65505.html</a></li>
+<li><a href="http://blog.csdn.net/xyang81/article/details/7292380">http://blog.csdn.net/xyang81/article/details/7292380</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
