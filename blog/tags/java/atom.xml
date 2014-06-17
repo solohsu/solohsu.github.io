@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Java | sOlOHsU's Blog<sup>&#946;</sup>]]></title>
+  <link href="http://www.solohsu.com/blog/tags/java/atom.xml" rel="self"/>
+  <link href="http://www.solohsu.com/"/>
+  <updated>2014-06-18T00:43:32+08:00</updated>
+  <id>http://www.solohsu.com/</id>
+  <author>
+    <name><![CDATA[Solo Hsu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[[转]细节见真功之 Javadoc]]></title>
+    <link href="http://www.solohsu.com/blog/2014/06/17/when-the-little-things-count-javadoc/"/>
+    <updated>2014-06-17T22:32:40+08:00</updated>
+    <id>http://www.solohsu.com/blog/2014/06/17/when-the-little-things-count-javadoc</id>
+    <content type="html"><![CDATA[<p>作为一个 Java 程序员，Javadoc 大家都应该写过吧，是不是觉得写的时候特简单呢？相信看完本文后你会若有所思。另外，本文非常适合处女座程序员阅读。</p>
+
+<h3>句号</h3>
+
+<p>为什么是句号而不是其他的标点符号呢？因为这涉及到一个 JDK 文档生成的规则：</p>
+
+<blockquote><p>The first sentence of each doc comment should be a summary sentence, containing a concise but complete description of the API item. This means the first sentence of each member, class, interface or package description. （成员、类、接口或包注释的第一个句子将作为该注释项的总结，这个句子应该是言简意赅的）</p></blockquote>
+
+<p>既然提到了句子，那就说明应该用标准的方式——句号来进行第一个句子的断句识别。也许是为了简洁，Javadoc 工具并没有“多语言句号识别”这个特性，所以不管我们用什么语言撰写文档注释，断句符号都必须是英文状态下的句号——.</p>
+
+<p>比如在 NetBeans IDE 里（默认编辑器配置）可以很直观的看到用于总结的第一个句子和后面描述的区别：</p>
+
+<p><img src="/images/first-sentence.png"></p>
+
+<p>在生成 Javadoc 后，类概要页面我们可以看到最终的效果：</p>
+
+<p><img src="/images/class-summary.png"></p>
+
+<p>在使用中文撰写文档注释时，为了保持整体风格一致，在所有需要使用句号的地方有两种策略可选择：</p>
+
+<ul>
+<li>都使用英文句号：这样做可以让生成的文档句号统一，但缺点是看上去有点别扭</li>
+<li>只有第一个句子使用英文句号，其余地方都是要中文句号：这样做后生成的文档看上去比较顺眼，但别人可能会奇怪为什么第一个句号是 .
+当然，最彻底的解决方案是不用中文写文档注释，这样就不存在要统一的问题了！</li>
+</ul>
+
+
+<p>下面我们重点介绍各种你熟悉的或是不熟悉的 Javadoc 文档标记（它们很有内涵）</p>
+
+<h3>@author</h3>
+
+<p>该标记使用频率是所有文档标记中最高的，我想这是因为：</p>
+
+<ul>
+<li>做好事要留名</li>
+<li>使用超简单，就像在填表格（姓名：           ）一样自然</li>
+</ul>
+
+
+<p>来看看大牛怎么写的：</p>
+
+<p><img src="/images/commons-lang-stringutils.png"></p>
+
+<p>（from Commons Lang 2.5 StringUtils）</p>
+
+<p>总结下来有三种写法：</p>
+
+<ul>
+<li>纯文本</li>
+<li>带邮箱链接</li>
+<li>带 HTTP 链接</li>
+</ul>
+
+
+<p>（个人建议用 HTTP 链接：打码时可以顺便推广一下自己的博客，哈哈）</p>
+
+<p>另外，在 JDK 代码中我们经常看到 @author unascribed，意思是：“该代码第一原作者不是我，但我实在也不知道是谁，就记作无名氏吧”（这是多么严肃的一种版权意识啊）</p>
+
+<h3>@serialXXX</h3>
+
+<p>这个系列应该是最不常用的文档标记了，它们到底是干嘛用的呢？请看<a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#serial">这里</a>。</p>
+
+<p>（我一次也没有使用过这些文档标记，看了官方文档后也还是没有搞懂怎么用，求各位指教）</p>
+
+<h3>@value</h3>
+
+<p>这个文档标记非常实用（不光好用），可以用于生成被标记的常量字段的值。</p>
+
+<p>直接用于常量字段时：</p>
+
+<p><img src="/images/value-code.png"></p>
+
+<p><img src="/images/value-html.png"></p>
+
+<p>也可以使用引用方式：</p>
+
+<p><img src="/images/value-ref-code.png"></p>
+
+<p><img src="/images/value-ref-html.png"></p>
+
+<h3>{@inheritDoc}</h3>
+
+<p>这个标签体现了 Java 面向对象的精辟所在：不但可以类可以集成，连文档都可以继承（足见 Java 在经典面向对象概念上的完备与圆润）。</p>
+
+<p>比如有个计算面积的接口：</p>
+
+<p><img src="/images/inheritdoc-interface-code.png"></p>
+
+<p>它的实现方法标注了 {@inheritDoc}<em>（处女座阅读提示：无 .）</em>：</p>
+
+<p><img src="/images/inheritdoc-impl-code.png"></p>
+
+<p>最后生成的文档：</p>
+
+<p><img src="/images/inheritdoc-html.png"></p>
+
+<ul>
+<li>基类的文档注释被继承到了子类</li>
+<li>子类可以再加入自己的注释（特殊化扩展）</li>
+<li>@return @param @throws 也会被继承</li>
+</ul>
+
+
+<p>其实在不写 {@inheritDoc} 的情况下也存在文档注释的继承，具体规则请看这里。</p>
+
+<h3>{@link} {@linkplain}</h3>
+
+<p>这两个链接标记大家用/见的应该比较多，但它们有什么区别、在什么场景下该怎么使用很少有人能够区分开（我猜你要用的时候一般也都是用 link 吧）。</p>
+
+<p>看看官网的标准解释：</p>
+
+<p><img src="/images/link.png"></p>
+
+<p>link 和 linkplain 的实参都是 <strong><em>package.class#member label</em></strong> 。唯一的不同就是因为字体不同，如果 label 是个纯文本，那就使用 linkplain 吧。<em>（根据这点，我严重怀疑 Javadoc 文档标记的设计者是处女座，~ ~）</em></p>
+
+<h3>pre</h3>
+
+<p>没错，这就是那个 HTML 标签，用于显示“原始样子”的。这个标签在写 Javadoc 的时候非常有用，用或者不使用在打码的时候看上去差别不大：</p>
+
+<p><img src="/images/pre-code.png"></p>
+
+<p>但最终生成 apidocs 之后差别一目了然<em>（处女座阅读提示：在源码文档注释中特别需要注意 pre 后 { 的位置，紧跟 </em>，无空格）*：</p>
+
+<p><img src="/images/pre-html.png"></p>
+
+<h3>@since</h3>
+
+<p>这个从字面的意思上很好理解，所以使用的比较多（如同 @author、@version 一样）。但问题是大家写的时候表达的意思五花八门，常见的有：</p>
+
+<ol>
+<li><p>想表达日期/时间
+@since 2014-01-01
+@since 2014-01-01 14:00:00</p></li>
+<li><p>想表达可运行的 JDK 版本
+@since JDK1.5</p></li>
+<li><p>想表达加入这个元素的版本
+@since 1.0.0</p></li>
+</ol>
+
+
+<p>根据官方文档解释，@since 表达的是被标记元素是哪个发布版本引入的（3）。比如别人在我们的文档注释中看到</p>
+
+<p><img src="/images/since.png"></p>
+
+<p>那他可以（应该）认为这个类是在该程序对外发布 1.0.0 版本时已经引入的。如果他要做二次开发，那他就可以很清晰的向后兼容了（我们在用 JDK 的时候就是这个场景）。</p>
+
+<h3>@version</h3>
+
+<p>提到了 @since 就自然会联想到 @version，因为它们的实参都是版本相关的。@version 要表达的是被标记元素自己的版本（注意对比 @since），也就是说这个版本只要代码改过就应该发生变化，而 @since 是不会变的。</p>
+
+<p>官方文档也解释了怎么用好这个文档标记：通过 SCCS 字符 &ldquo;%I%, %G%"，例如 1.39, 02/28/97（文件版本号, 日期）生成。但实际上很少有项目这么做（至少目前 Oracle JDK 没这么做，甚至都没有使用 @version，或者是使用了但最后由于特殊原因总体移除了），大家一般都是 @version 1.0.0 然后就再也不修改了，不管被标记的元素改了多少次（这样的做法还不如不写）。</p>
+
+<p>当然，通过版本控制系统 hook 来做是比较经典的做法，不过这样总感觉没有把这个标记的能力完全发挥出来。在我们的项目里是这样使用的：@version 1.2.3.4, Jun 9, 2014</p>
+
+<p>重点是版本号部分，在这个例子中从左到右（1.2.3.4）分别表示：</p>
+
+<ul>
+<li>兼容性位 1，表示兼容性，如果 +1 了说明这个修改是不兼容的</li>
+<li>特性位 2，表示已引入了两个特性，每次 +1 说明引入一个新特性</li>
+<li>缺陷修复位 3，表示已经修复了 3 个缺陷，每次 +1 说明修复了一个缺陷</li>
+<li>重构位 4，表示已经进行了 4 次重构，每次 +1 说明重构了一次</li>
+<li>前面 3 位表达的意义和 Semantic Versioning 建议的一致，重构我觉得非常重要，所以也加了进来。</li>
+</ul>
+
+
+<h3>@exception @throws</h3>
+
+<p>这两兄弟的情况比 @link @linkplain 更纠结（人家 link 兄弟最起码可以区分出来使用场景）。按照官方文档解释：它们完全是同义词，没有任何区分。那当年 Sun 在 JDK1.2 的时候为什么要加入 @throws 呢——答案是起名失误了，词性没弄匹配：@throws Exception 比 @exception Exception 更符合语法，代入感更好！（细节：<a href="http://stackoverflow.com/questions/5510170/in-javadoc-what-is-the-difference-between-the-tags-throws-and-exception">In javadoc, what is the difference between the tags @throws and @exception?</a>）</p>
+
+<h3>标记总表</h3>
+
+<p>来张 Javadoc 文档标记总表：</p>
+
+<table summary="list of current javadoc tags" width="40%" border="0"> 
+  <tbody> 
+   <tr>
+    <th><span style="font-size: x-small;">Tag</span></th>
+    <th align="center"><span style="font-size: x-small;">Introduced in JDK/SDK</span></th>
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#author"><code>@author</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#code"><code>{@code}</code></a></td> 
+    <td align="center">1.5</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#docRoot"><code>{@docRoot}</code></a></td> 
+    <td align="center">1.3</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#deprecated"><code>@deprecated</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#exception"><code>@exception</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#inheritDoc"><code>{@inheritDoc}</code></a></td> 
+    <td align="center">1.4</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#link"><code>{@link}</code></a></td> 
+    <td align="center">1.2</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#linkplain"><code>{@linkplain}</code></a></td> 
+    <td align="center">1.4</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#literal"><code>{@literal}</code></a></td> 
+    <td align="center">1.5</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#param"><code>@param</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#return"><code>@return</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#see"><code>@see</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#serial"><code>@serial</code></a></td> 
+    <td align="center">1.2</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#serialData"><code>@serialData</code></a></td> 
+    <td align="center">1.2</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#serialField"><code>@serialField</code></a></td> 
+    <td align="center">1.2</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#since"><code>@since</code></a></td> 
+    <td align="center">1.1</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#throws"><code>@throws</code></a></td> 
+    <td align="center">1.2</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#value"><code>{@value}</code></a></td> 
+    <td align="center">1.4</td> 
+   </tr> 
+   <tr> 
+    <td><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#version"><code>@version</code></a></td> 
+    <td align="center">1.0</td> 
+   </tr> 
+  </tbody> 
+ </table>
+
+
+<p>这个表是 JDK7 技术手册里的，从中我们可以看出，自 JDK1.5 以后就没有加过新的文档标记了，目测有两个原因：</p>
+
+<ul>
+<li><p>Oracle：“这些已经足够开发人员使用了，没必要加新的了”</p></li>
+<li><p>*Sun：“看吧，Oracle 严重缺乏折腾精神，当初不应该卖给它的”
+文档标记介绍完了，下面我们来聊聊 Javadoc 相关的其他侃点。</p></li>
+</ul>
+
+
+<h3>getter/setter/isTrue</h3>
+
+<p>对于 POJO 来说，这几个方法的注释格式非常固定，一般我们都是用 IDE 自动生成：这样的话别人一看到这样固定格式的注释（或者索性不要添加任何注释）就知道这部分相对于其他部分并不重要，
+而一旦有的 getter/setter/isTrue 注释不是这样约定的，那就说明了实现上面不只是简单的 get/set/is，还加入了额外的逻辑处理。</p>
+
+<h3>对齐</h3>
+
+<p>Javadoc 文档注释也有对齐（不是前面 pre 例子那种），这里说的对齐主要指的是以源码视图看到的，最典型的场景就是在给方法添加文档注释的时候，我们经常看到两种风格：</p>
+
+<p><img src="/images/align-para.png"></p>
+
+<p>第一眼看上去是不是风格 2 要顺眼得多？但最好还是使用风格 1，因为：</p>
+
+<ul>
+<li>这和编辑器配置的字体有关，如果不是（适合的）等宽字体，那会非常的参差不齐</li>
+<li>浪费空间，特别是当注释内容多了需要换行的时候会很别扭</li>
+<li>最后生成的 apidocs 效果是一模一样的（无对齐）</li>
+</ul>
+
+
+<p>（一些 IDE 默认格式化文档注释的时候也是使用风格 1 进行格式化的，强烈建议使用风格 1）</p>
+
+<h3>包注释</h3>
+
+<p>和前面几点打码风格相关的细节比起来，包注释是具有一定的实用性的。虽然大家可能用得很少，但看得应该比较多，就是这部分：</p>
+
+<p><img src="/images/package.png"></p>
+
+<p>这里我们使用了两种方式来生成包文档：</p>
+
+<ul>
+<li>package.html：这是 JDK1.5 以前的方式，现在已经不推荐使用</li>
+<li>package-info.java：目前推荐方式，因为这样可以使用注解</li>
+</ul>
+
+
+<p>在包上面使用注解？这个用法和在其他地方使用注解一样，只是被标注的元素变成了包，在运行时可以获取到包的注解，然后做你想做的事情吧！</p>
+
+<h3>中文</h3>
+
+<p>一开始我们提到了句号的问题（那的确是一个问题），最后我们来看看中文在写文档注释的时候也非常值得注意的一点（其实不只是 Javadoc 文档注释，该建议也适用于其他一些情况）：在中文和英文、数字中间插入一个空格（本文就是这样排版的）。</p>
+
+<p>比如说：</p>
+
+<ul>
+<li>我觉得Java非常cool，特别是JDK8中的lambda，真希望9能带来更多实用特性</li>
+<li>我觉得 Java 非常 cool，特别是 JDK8 中的 lambda，真希望 9 能带来更多实用特性</li>
+</ul>
+
+
+<p>后者看上去就比前者更舒服一些，这样的排版方式适合纯文本编辑器，如果使用的是 Office 之类的工具就不需要手动空格了，因为它们默认已经处理的很好了。</p>
+
+<h3>总结</h3>
+
+<p>本文介绍了一些 Javadoc 文档注释相关的细节，从这冰山一角相信你对 Java 也有了另一番体验（Java 的进化、工业化）。</p>
+
+<p>总结一下本文内容：</p>
+
+<ul>
+<li>对于文档标记，大家可以尽量尝试使用：把自己的思想通过适合的方式表达给他人是一种好习惯</li>
+<li>对于风格相关，大家也可以适当尝试（处女座/强迫症就算了）：某大厂在某次改句号问题后出现过生产故障</li>
+</ul>
+
+
+<p>不过，大家也千万不要太较真，毕竟对于一个好的程序来说，代码应该就是它的文档（之一）。</p>
+
+<p>@转自 <a href="http://88250.b3log.org/when-the-little-things-count-javadoc">http://88250.b3log.org/when-the-little-things-count-javadoc</a></p>
+]]></content>
+  </entry>
+  
+</feed>
